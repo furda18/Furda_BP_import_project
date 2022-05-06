@@ -1146,83 +1146,6 @@ const struct device *flash_dev;
 /* 1000 msec = 1 sec */
 #define SLEEP_TIME_MS 1000
 
-/* The devicetree node identifier for the "led0" alias. */
-//#define LED0_NODE DT_ALIAS(led0)
-//#define LED1_NODE DT_ALIAS(led1)
-//#define LED2_NODE DT_ALIAS(led2)
-//#define LED3_NODE DT_ALIAS(led3)
-
-//#if (DT_NODE_HAS_STATUS(LED0_NODE, okay))
-
-//#define LED0	
-////DT_GPIO_LABEL(LED0_NODE, gpios)
-//#define PIN	
-////DT_GPIO_PIN(LED0_NODE, gpios)
-//#define FLAGS	
-////DT_GPIO_FLAGS(LED0_NODE, gpios)
-
-//#define LED1	
-////DT_GPIO_LABEL(LED1_NODE, gpios)
-////#define FLAGS	DT_GPIO_FLAGS(LED1_NODE, gpios)
-//#define LED2	
-////DT_GPIO_LABEL(LED2_NODE, gpios)
-
-
-//#define LED3	
-////DT_GPIO_LABEL(LED3_NODE, gpios)
-
-
-/*Thingy LED*/
-#include <zephyr.h>
-#include <device.h>
-#include <devicetree.h>
-#include <drivers/gpio.h>
-
-/* 1000 msec = 1 sec */
-#define SLEEP_TIME_MS 1000
-
-///* The devicetree node identifier for the "led0" alias. */
-//#define LED0_NODE_t DT_ALIAS(led0) //red
-//#define LED1_NODE_t DT_ALIAS(led1) //green
-//#define LED2_NODE_t DT_ALIAS(led2) //blue
-
-//#if DT_NODE_HAS_STATUS(LED0_NODE_t, okay)
-//#define LED0_t DT_GPIO_LABEL(LED0_NODE_t, gpios)
-//#define PIN_t DT_GPIO_PIN(LED0_NODE_t, gpios)
-//#define FLAGS_t DT_GPIO_FLAGS(LED0_NODE_t, gpios)
-//#else
-///* A build error here means your board isn't set up to blink an LED. */
-//#error "Unsupported board: led0 devicetree alias is not defined"
-//#define LED0_t ""
-//#define PIN_t 0
-//#define FLAGS_t 0
-//#endif
-
-//#if DT_NODE_HAS_STATUS(LED1_NODE_t, okay)
-//#define LED1_t DT_GPIO_LABEL(LED1_NODE_t, gpios)
-//#define PIN_t DT_GPIO_PIN(LED1_NODE_t, gpios)
-//#define FLAGS_t DT_GPIO_FLAGS(LED1_NODE_t, gpios)
-//#else
-///* A build error here means your board isn't set up to blink an LED. */
-//#error "Unsupported board: led0 devicetree alias is not defined"
-//#define LED1_t ""
-//#define PIN_t 0
-//#define FLAGS_t 0
-//#endif
-
-//#if DT_NODE_HAS_STATUS(LED2_NODE_t, okay)
-//#define LED2_t DT_GPIO_LABEL(LED2_NODE_t, gpios)
-//#define PIN_t DT_GPIO_PIN(LED2_NODE_t, gpios)
-//#define FLAGS_t DT_GPIO_FLAGS(LED2_NODE_t, gpios)
-//#else
-///* A build error here means your board isn't set up to blink an LED. */
-//#error "Unsupported board: led0 devicetree alias is not defined"
-//#define LED2_t ""
-//#define PIN_t 0
-//#define FLAGS_t 0
-//#endif
-
-
 
 #include <stdlib.h> //for using the function sleep
 #include <stdio.h>
@@ -1234,6 +1157,10 @@ const struct device *flash_dev;
 #include <drivers/sensor.h>
 #include <stdio.h>
 #include <sys/util.h>
+
+//maybe for humidity
+#include <inttypes.h>
+
 
 
 //#include <devicetree.h>
@@ -1598,8 +1525,9 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
               LOG_INF("Observation:%u\n", obs);
 
               /* display temperature */
-              LOG_INF("Temperature:%d C\n", temp.val1);
-              LOG_INF("%" PRId32 " C ..a...\n", temp.val1);
+              //LOG_INF("Temperature:%d C\n", temp.val1);
+              LOG_INF("1Temperature:%d C\n", temp.val2);
+              //LOG_INF("%" PRId32 " C ..a...\n", temp.val1);
               //LOG_INF("Temperature:%d C\n", temp);
 
               //if(temp.val1 > 0){
@@ -1607,9 +1535,24 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
               //}
 
               /* display humidity */
-              LOG_INF("Relative Humidity:%d %%\n",
-                     hum.val1);
-              
+              //LOG_INF("Relative Humidity:%d %%\n",
+              //       hum.val1);
+              //LOG_INF("%03" PRId32 " C ..a...\n", hum.val1);
+
+              //LOG_INF("Relative Humidity:%d %%\n",
+              //       hum.val2);
+              //LOG_INF("%03" PRId32 " C ..a...\n", hum.val2);
+              LOG_INF("1Relative Humidity:%d %%\n", hum.val1);
+              LOG_INF("2Relative Humidity:%d %%\n", hum.val2);
+
+              LOG_INF("%03" PRId32 " ---\n", hum.val1);
+              printf("%" PRId32 " ***\n", hum.val2);
+              LOG_INF("%03" PRId32 " ---\n", hum.val2);
+              printf("%" PRId32 " ***\n", hum.val1);
+
+
+              //LOG_INF("idk:%d %\n", hum, hum);
+
               if(hum.val1 > 56){
                 led_is_on_t = true; 
                 LOG_INF("MORE THAN 56, turing on");
