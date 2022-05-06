@@ -1247,28 +1247,28 @@ static void process_sample(const struct device *dev)
 	static unsigned int obs;
 	struct sensor_value temp, hum;
 	if (sensor_sample_fetch(dev) < 0) {
-		LOG_DBG("Sensor sample update error\n");
+		LOG_INF("Sensor sample update error\n");
 		return;
 	}
 
 	if (sensor_channel_get(dev, SENSOR_CHAN_AMBIENT_TEMP, &temp) < 0) {
-		LOG_DBG("Cannot read HTS221 temperature channel\n");
+		LOG_INF("Cannot read HTS221 temperature channel\n");
 		return;
 	}
 
 	if (sensor_channel_get(dev, SENSOR_CHAN_HUMIDITY, &hum) < 0) {
-		LOG_DBG("Cannot read HTS221 humidity channel\n");
+		LOG_INF("Cannot read HTS221 humidity channel\n");
 		return;
 	}
 
 	++obs;
-	LOG_DBG("Observation:%u\n", obs);
+	LOG_INF("Observation:%u\n", obs);
 
 	/* display temperature */
-	LOG_DBG("Temperature:%d C\n", temp.val1);
+	LOG_INF("Temperature:%d C\n", temp.val1);
 
 	/* display humidity */
-	LOG_DBG("Relative Humidity:%d %%\n",
+	LOG_INF("Relative Humidity:%d %%\n",
 	       hum.val1);
 }
 
@@ -1575,7 +1575,9 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
                               return;
                       }
               }
-                      static unsigned int obs;
+              
+              static unsigned int obs;
+
               struct sensor_value temp, hum;
               if (sensor_sample_fetch(dev_t) < 0) {
                       LOG_INF("Sensor sample update error\n");
@@ -1597,6 +1599,8 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 
               /* display temperature */
               LOG_INF("Temperature:%d C\n", temp.val1);
+              LOG_INF("%" PRId32 " C ..a...\n", temp.val1);
+              //LOG_INF("Temperature:%d C\n", temp);
 
               //if(temp.val1 > 0){
               //  led_is_on_t = true; 
@@ -1606,12 +1610,12 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
               LOG_INF("Relative Humidity:%d %%\n",
                      hum.val1);
               
-              if(hum.val1 < 56){
-                led_is_on_t = true; 
-                LOG_INF("LESS than 56");
-              }
               if(hum.val1 > 56){
-                LOG_INF("MORE THAN 56, turing off");
+                led_is_on_t = true; 
+                LOG_INF("MORE THAN 56, turing on");
+              }
+              if(hum.val1 < 56){
+                LOG_INF("less, led off");
                 led_is_on_t = false;
                 dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led0), gpios));
                 ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led0), gpios));
