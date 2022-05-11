@@ -35,6 +35,11 @@
 #include <storage/flash_map.h>
 #include <fs/nvs.h>
 
+
+
+
+
+
 static struct nvs_fs fs;
 
 #define STORAGE_NODE_LABEL storage
@@ -45,7 +50,7 @@ static struct nvs_fs fs;
 
 /*definovanie pamate, este navyse su tie reboot countery*/
 int rc = 0, cnt = 0, cnt_his = 0;
-uint8_t key[9];
+uint8_t *key;
 uint32_t reboot_counter = 0U, reboot_counter_his;
 struct flash_pages_info info;
 const struct device *flash_dev;
@@ -279,24 +284,6 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 			    const void *buf, uint16_t len, uint16_t offset,
 			    uint16_t flags)
 {         
-        //// 
-        for(int a=0; a<2; a++){
-          LOG_INF("VVVVV %d \n", first_byte[a].logic_value);
-          LOG_INF("VVVVV %s \n", first_byte[a].logic_name);
-        }
-
-        for(int a=0; a<2; a++){
-          LOG_INF("WWWWW %d \n", second_byte[a].logic_value);
-          LOG_INF("VVVVV %s \n", second_byte[a].logic_name);
-
-        }
-        //asddsa(decider);
-        //LOG_INF("AAAAAAAAAAAAAAAc-> %d %d\n", decider[0].a, decider[0].b);
-        //LOG_INF("AAAAAAAAAAAAAAAd-> %d %d\n", decider[1].a , decider[1].b );
-        
-
-
-        ////
         
         //LOG_INF("Len co dosla dako do funkcie: %d\n", len);
         //LOG_INF("Offset? : %d\n", offset);
@@ -315,16 +302,16 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 	memcpy(value + offset, buf, len);
         
         
-        int lenlen = sizeof(value)/sizeof(value[0]);
-        LOG_INF("Length of written data is max: %d \n", lenlen);
+        //int lenlen = sizeof(value)/sizeof(value[0]);
+        //LOG_INF("Length of written data is max: %d \n", lenlen);
 
-        //for (int i = 0; i < 9; i++){
+        //for (int i = 0; i < len; i++){
           
         //  LOG_INF("value[%d] = ", i);
         //  LOG_INF("%" PRIx32 "\n", value[i]);   
         
         //}
-
+        LOG_INF("DLZKA: %d\n", len);
 	/* KEY_ID is used to store a key, lets see if we can read it from flash
 	 */
 	rc = nvs_read(&fs, KEY_ID, &key, sizeof(key));
@@ -345,7 +332,11 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 
 		(void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
 		for (int n = 0; n < len; n++) {
-			printk("%x ", key[n]);
+			printk("%d %x ", n, key[n]);
+
+                        if(n==8 || n==17 || n==26){
+                          printk("\n");
+                        }
 		}
 		printk("\n");
 	} else   {/* item was not found, add it */
@@ -360,6 +351,16 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 		//key[3] = value[3];
 		(void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
 	}
+        
+        int pocet_configov = (int)(len/9);
+        //alebo budem po 9 priratavat, ale ak sa to rovna, konci, ak nie ide aj s nedokoncenymi datami
+        
+        LOG_INF("pocet_configov: %d\n", pocet_configov);
+
+        for(int d=0; d<=pocet_configov; d++){
+          LOG_INF("Prva value kazdeho je: %d\n", value[d*9]);
+        }
+     
         
         ///*Thingy kod*/
         const struct device *dev_t;
