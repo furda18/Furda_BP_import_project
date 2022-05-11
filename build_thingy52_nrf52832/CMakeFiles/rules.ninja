@@ -524,6 +524,44 @@ rule C_STATIC_LIBRARY_LINKER__drivers__i2c_
 #############################################
 # Rule for compiling C files.
 
+rule C_COMPILER__drivers__sensor__hts221_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = C:\Users\difo\ncs\v1.9.1\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER__drivers__sensor__hts221_
+  command = cmd.exe /C "$PRE_LINK && C:\Users\difo\ncs\v1.9.1\toolchain\opt\bin\cmake.exe -E rm -f $TARGET_FILE && C:\Users\difo\ncs\v1.9.1\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\difo\ncs\v1.9.1\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
+rule C_COMPILER__drivers__sensor__stmemsc_
+  depfile = $DEP_FILE
+  deps = gcc
+  command = C:\Users\difo\ncs\v1.9.1\toolchain\opt\bin\arm-none-eabi-gcc.exe $DEFINES $INCLUDES $FLAGS -MD -MT $out -MF $DEP_FILE -o $out -c $in
+  description = Building C object $out
+
+
+#############################################
+# Rule for linking C static library.
+
+rule C_STATIC_LIBRARY_LINKER__drivers__sensor__stmemsc_
+  command = cmd.exe /C "$PRE_LINK && C:\Users\difo\ncs\v1.9.1\toolchain\opt\bin\cmake.exe -E rm -f $TARGET_FILE && C:\Users\difo\ncs\v1.9.1\toolchain\opt\bin\arm-none-eabi-ar.exe qc $TARGET_FILE $LINK_FLAGS $in && C:\Users\difo\ncs\v1.9.1\toolchain\opt\bin\arm-none-eabi-ranlib.exe $TARGET_FILE && $POST_BUILD"
+  description = Linking C static library $TARGET_FILE
+  restat = $RESTAT
+
+
+#############################################
+# Rule for compiling C files.
+
 rule C_COMPILER__drivers__regulator_
   depfile = $DEP_FILE
   deps = gcc

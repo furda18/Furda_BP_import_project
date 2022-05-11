@@ -1,53 +1,35 @@
-zephyr/CMakeFiles/zephyr.dir/subsys/logging/log_backend_uart.c.obj: \
- C:/Users/difo/ncs/v1.9.1/zephyr/subsys/logging/log_backend_uart.c \
+zephyr/drivers/console/CMakeFiles/drivers__console.dir/rtt_console.c.obj: \
+ C:/Users/difo/ncs/v1.9.1/zephyr/drivers/console/rtt_console.c \
  C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/include/generated/autoconf.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/toolchain/zephyr_stdint.h \
- ../../../../include/logging/log_backend.h \
- ../../../../include/logging/log_msg.h ../../../../include/sys/atomic.h \
- ../../../../lib/libc/minimal/include/stdbool.h \
- ../../../../include/toolchain.h ../../../../include/toolchain/gcc.h \
- ../../../../include/toolchain/common.h \
+ ../../../../include/kernel.h ../../../../include/kernel_includes.h \
  c:\users\difo\ncs\v1.9.1\toolchain\opt\lib\gcc\arm-none-eabi\9.2.1\include\stddef.h \
  ../../../../include/zephyr/types.h \
  ../../../../lib/libc/minimal/include/stdint.h \
- ../../../../include/sys/util_macro.h \
- ../../../../include/sys/util_internal.h \
- ../../../../include/sys/util_loops.h \
- ../../../../include/sys/atomic_builtin.h ../../../../include/sys/util.h \
- ../../../../lib/libc/minimal/include/string.h \
- ../../../../include/logging/log_msg2.h \
- ../../../../include/logging/log_instance.h \
- ../../../../include/sys/mpsc_packet.h ../../../../include/sys/cbprintf.h \
- c:\users\difo\ncs\v1.9.1\toolchain\opt\lib\gcc\arm-none-eabi\9.2.1\include\stdarg.h \
- ../../../../include/sys/cbprintf_internal.h \
- ../../../../lib/libc/minimal/include/errno.h \
- ../../../../include/sys/errno_private.h \
- zephyr/include/generated/syscalls/errno_private.h \
- zephyr/include/generated/syscall_list.h ../../../../include/syscall.h \
- ../../../../include/arch/syscall.h \
- ../../../../include/arch/arm/aarch32/syscall.h \
+ ../../../../lib/libc/minimal/include/limits.h \
+ ../../../../include/toolchain.h ../../../../include/toolchain/gcc.h \
+ ../../../../include/toolchain/common.h \
+ ../../../../lib/libc/minimal/include/stdbool.h \
  ../../../../include/linker/sections.h \
  ../../../../include/linker/section_tags.h \
- ../../../../include/sys/cbprintf_cxx.h \
- zephyr/include/generated/syscalls/log_msg2.h \
- ../../../../include/tracing/tracing_syscall.h \
+ ../../../../include/sys/atomic.h ../../../../include/sys/util_macro.h \
+ ../../../../include/sys/util_internal.h \
+ ../../../../include/sys/util_loops.h \
+ ../../../../include/sys/atomic_builtin.h \
  ../../../../include/sys/__assert.h ../../../../include/sys/printk.h \
+ c:\users\difo\ncs\v1.9.1\toolchain\opt\lib\gcc\arm-none-eabi\9.2.1\include\stdarg.h \
  ../../../../lib/libc/minimal/include/inttypes.h \
- ../../../../include/logging/log_core.h \
- zephyr/include/generated/syscalls/log_core.h \
- ../../../../include/logging/log_output.h \
- ../../../../include/logging/log_output_dict.h \
- ../../../../include/logging/log_backend_std.h \
- ../../../../include/kernel.h ../../../../include/kernel_includes.h \
- ../../../../lib/libc/minimal/include/limits.h \
- ../../../../include/kernel/sched_priq.h ../../../../include/sys/dlist.h \
- ../../../../include/sys/rb.h ../../../../include/sys/slist.h \
- ../../../../include/sys/list_gen.h ../../../../include/sys/sflist.h \
- ../../../../include/kernel_structs.h ../../../../include/sys/sys_heap.h \
- ../../../../include/arch/structs.h \
+ ../../../../include/kernel/sched_priq.h ../../../../include/sys/util.h \
+ ../../../../include/sys/dlist.h ../../../../include/sys/rb.h \
+ ../../../../include/sys/slist.h ../../../../include/sys/list_gen.h \
+ ../../../../include/sys/sflist.h ../../../../include/kernel_structs.h \
+ ../../../../include/sys/sys_heap.h ../../../../include/arch/structs.h \
  ../../../../include/kernel/mempool_heap.h \
- ../../../../include/kernel_version.h ../../../../include/arch/cpu.h \
- ../../../../include/sys/arch_interface.h \
+ ../../../../include/kernel_version.h ../../../../include/syscall.h \
+ zephyr/include/generated/syscall_list.h \
+ ../../../../include/arch/syscall.h \
+ ../../../../include/arch/arm/aarch32/syscall.h \
+ ../../../../include/arch/cpu.h ../../../../include/sys/arch_interface.h \
  ../../../../include/irq_offload.h \
  ../../../../include/arch/arch_inlines.h \
  ../../../../include/arch/arm/aarch32/arch.h \
@@ -117,15 +99,19 @@ zephyr/CMakeFiles/zephyr.dir/subsys/logging/log_backend_uart.c.obj: \
  ../../../../include/kernel/thread.h ../../../../include/sys/kobject.h \
  zephyr/include/generated/kobj-types-enum.h \
  zephyr/include/generated/syscalls/kobject.h \
+ ../../../../include/tracing/tracing_syscall.h \
+ ../../../../lib/libc/minimal/include/errno.h \
+ ../../../../include/sys/errno_private.h \
+ zephyr/include/generated/syscalls/errno_private.h \
  ../../../../include/tracing/tracing_macros.h \
  ../../../../include/tracing/tracing.h \
  ../../../../include/tracing/tracking.h \
- zephyr/include/generated/syscalls/kernel.h \
- ../../../../include/logging/log.h ../../../../include/device.h \
+ zephyr/include/generated/syscalls/kernel.h ../../../../include/device.h \
  ../../../../include/init.h ../../../../include/sys/device_mmio.h \
  ../../../../include/sys/mem_manage.h \
  zephyr/include/generated/syscalls/mem_manage.h \
  zephyr/include/generated/device_extern.h \
  zephyr/include/generated/syscalls/device.h \
- ../../../../include/drivers/uart.h \
- zephyr/include/generated/syscalls/uart.h
+ C:/Users/difo/ncs/v1.9.1/modules/debug/segger/SEGGER/SEGGER_RTT.h \
+ C:/Users/difo/ncs/v1.9.1/modules/debug/segger/Config/SEGGER_RTT_Conf.h \
+ ../../../../lib/libc/minimal/include/stdlib.h

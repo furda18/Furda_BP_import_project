@@ -172,6 +172,12 @@ C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf5
 C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/drivers/i2c/CMakeFiles/rebuild_cache.dir
 C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/drivers/sensor/CMakeFiles/edit_cache.dir
 C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/drivers/sensor/CMakeFiles/rebuild_cache.dir
+C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/drivers/sensor/hts221/CMakeFiles/drivers__sensor__hts221.dir
+C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/drivers/sensor/hts221/CMakeFiles/edit_cache.dir
+C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/drivers/sensor/hts221/CMakeFiles/rebuild_cache.dir
+C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/drivers/sensor/stmemsc/CMakeFiles/drivers__sensor__stmemsc.dir
+C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/drivers/sensor/stmemsc/CMakeFiles/edit_cache.dir
+C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/drivers/sensor/stmemsc/CMakeFiles/rebuild_cache.dir
 C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/drivers/regulator/CMakeFiles/drivers__regulator.dir
 C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/drivers/regulator/CMakeFiles/edit_cache.dir
 C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/drivers/regulator/CMakeFiles/rebuild_cache.dir
@@ -287,6 +293,8 @@ C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf5
 C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/modules/hal_nordic/nrfx/CMakeFiles/rebuild_cache.dir
 C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/modules/st/CMakeFiles/edit_cache.dir
 C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/modules/st/CMakeFiles/rebuild_cache.dir
+C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/modules/st/sensor/stmemsc/CMakeFiles/edit_cache.dir
+C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/modules/st/sensor/stmemsc/CMakeFiles/rebuild_cache.dir
 C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/modules/libmetal/CMakeFiles/edit_cache.dir
 C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/modules/libmetal/CMakeFiles/rebuild_cache.dir
 C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/modules/littlefs/CMakeFiles/edit_cache.dir

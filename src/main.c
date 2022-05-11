@@ -8,11 +8,10 @@
 
 #include <zephyr/types.h>
 #include <stddef.h>
-#include <string.h>
 #include <errno.h>
 #include <sys/printk.h>
 #include <sys/byteorder.h>
-#include <zephyr.h>
+
 
 #include <settings/settings.h>
 
@@ -40,17 +39,9 @@ static struct nvs_fs fs;
 
 #define STORAGE_NODE_LABEL storage
 
-/* 1000 msec = 1 sec */
-#define SLEEP_TIME      100
-/* maximum reboot counts, make high enough to trigger sector change (buffer */
-/* rotation). */
-#define MAX_REBOOT 400
 
-#define ADDRESS_ID 1
 #define KEY_ID 2
-#define RBT_CNT_ID 3
-#define STRING_ID 4
-#define LONG_ID 5
+
 
 /*definovanie pamate, este navyse su tie reboot countery*/
 int rc = 0, cnt = 0, cnt_his = 0;
@@ -61,8 +52,6 @@ const struct device *flash_dev;
 
 /*LED Preamble*/
 
-#include <zephyr.h>
-#include <device.h>
 #include <devicetree.h>
 #include <drivers/gpio.h>
 
@@ -75,8 +64,7 @@ const struct device *flash_dev;
 #include <time.h>
 
 /*Temperature and Humidity*/
-#include <zephyr.h>
-#include <device.h>
+
 #include <drivers/sensor.h>
 #include <stdio.h>
 #include <sys/util.h>
@@ -85,8 +73,6 @@ const struct device *flash_dev;
 #include <inttypes.h>
 
 
-
-//#include <devicetree.h>
 //#include <drivers/gpio.h>
 #include <logging/log.h>
 
@@ -128,6 +114,12 @@ static void hts221_handler(const struct device *dev,
 	process_sample(dev);
 }
 
+//char 2
+struct Logic_deciders{
+  int data_position;
+  int data_value;
+  char* information;
+};
 
 /* Custom Service Variables */
 #define BT_UUID_CUSTOM_SERVICE_VAL \
@@ -274,18 +266,54 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 }
 
 
+struct Logic_deciderss{
+          int* a;
+          int* b;         
+}decider[20];
+
+void asddsa(struct Logic_deciderss *dd){
+
+    LOG_INF("FFFFFFFFFFF...%d %d\n", dd[0].a, dd[0].b);
+}
 
 static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 			    const void *buf, uint16_t len, uint16_t offset,
 			    uint16_t flags)
 {         
+        //// 
+        //struct Logic_deciderss decider[5];
+        
+        //decider[0].a = 0;
+        //decider[0].b = 0;
+
+        //decider[1].a = 0;
+        //decider[1].b = 1;
+
+        asddsa(decider);
+        LOG_INF("AAAAAAAAAAAAAAAc-> %d %d\n", decider[0].a, decider[0].b);
+        LOG_INF("AAAAAAAAAAAAAAAd-> %d %d\n", decider[1].a , decider[1].b );
+        //struct Logic_deciderss decider = {0,0,"turn_off_light"};
+        //struct Logic_deciderss decider1 = {0,0,"turn_off_light"};
+
+        //int place =0;
+        ////first byte
+        ////Logic_deciderss decider[0] = {0,0,"turn_off_light"};
+        ////Logic_deciderss decider[1] = {0,1,"turn_on_light"};
+        ////Logic_deciderss decider[place++] = {0,1,"blink_light"};
+        
+        //LOG_INF("----> %d %d \n", place, decider.a);
+
+
+        ////
+        
         LOG_INF("Len co dosla dako do funkcie: %d\n", len);
         LOG_INF("Offset? : %d\n", offset);
         //len = 9;
 	//uint8_t *value = attr->user_data;
         uint8_t *value = attr->user_data;
         
-
+        
+        //manualne obmedzenie na dlzku
 	//if (offset + len > sizeof(signed_value2)) {
  //               LOG_INF("BT_ATT_ERR_INVALID_OFFSET\n");
 	//	return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
@@ -309,15 +337,15 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 	 */
 	rc = nvs_read(&fs, KEY_ID, &key, sizeof(key));
         if (rc > 0) { /* item was found, show it */
-		LOG_INF("Id: %d, OLD Key: ", KEY_ID);
+		//LOG_INF("Id: %d, OLD Key: ", KEY_ID);
 		for (int n = 0; n < len; n++) {
-			printk("%x ", key[n]);
+			//printk("%x ", key[n]);
                         key[n] = value[n];
 		}
-		LOG_INF("\n");
+		//LOG_INF("\n");
 
                 /*new key*/
-                LOG_INF("NEW Key: ");
+                //LOG_INF("NEW Key: ");
 		//key[0] = value[0];
 		//key[1] = value[1];
 		//key[2] = value[2];
@@ -455,6 +483,8 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
               
               //led_is_on_t = true; 
               //const struct device *dev_t = device_get_binding("HTS221");
+              const struct device *dev_t = device_get_binding(DT_LABEL(DT_INST(0, st_hts221)));
+
               if (dev_t == NULL) {
                       LOG_INF("Could not get HTS221 device\n");
                       return;
@@ -493,19 +523,12 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
               LOG_INF("Observation:%u\n", obs);
 
               /* display temperature */
-              //LOG_INF("Temperature:%d C\n", temp.val1);
-              LOG_INF("1Temperature:%d C\n", temp.val2);
-              //LOG_INF("%" PRId32 " C ..a...\n", temp.val1);
-              //LOG_INF("Temperature:%d C\n", temp);
+              LOG_INF("1Temperature:%d C\n", temp.val1);
+              
 
               /* display humidity */
               LOG_INF("1Relative Humidity:%d %%\n", hum.val1);
-              LOG_INF("2Relative Humidity:%d %%\n", hum.val2);
-
-              LOG_INF("%03" PRId32 " ---\n", hum.val1);
-              LOG_INF("%" PRId32 " ***\n", hum.val2);
-              LOG_INF("%03" PRId32 " ---\n", hum.val2);
-              LOG_INF("%" PRId32 " ***\n", hum.val1);
+             
 
               //zlomovy bod - osetri
               int break_point = value[6];
@@ -1163,9 +1186,30 @@ static void hrs_notify(void)
 	bt_hrs_notify(heartrate);
 }
 
+
+
+
+
 void main(void)
 {         
         
+        //Vseobecne zadefinovanie miesta vstupu a co predstavuje
+       
+        
+        decider[0].a = 0;
+        decider[0].b = 0;
+
+        decider[1].a = 0;
+        decider[1].b = 1;
+
+        asddsa(decider);
+
+
+        //register_input(0, 0, "turn_off_light");
+        //register_input(1, "turn_on_light");
+
+
+
         flash_dev = FLASH_AREA_DEVICE(STORAGE_NODE_LABEL);
 	if (!device_is_ready(flash_dev)) {
 		printk("Flash device %s is not ready\n", flash_dev->name);
@@ -1209,6 +1253,8 @@ void main(void)
 
 
 
+
+
 	/* Implement notification. At the moment there is no suitable way
 	 * of starting delayed work so we do it here
 	 */
@@ -1246,6 +1292,5 @@ void main(void)
 
 
 }
-
 
 

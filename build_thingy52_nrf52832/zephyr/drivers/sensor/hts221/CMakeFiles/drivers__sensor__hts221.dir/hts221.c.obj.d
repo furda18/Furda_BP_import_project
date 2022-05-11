@@ -1,15 +1,16 @@
-zephyr/drivers/console/CMakeFiles/drivers__console.dir/uart_console.c.obj: \
- C:/Users/difo/ncs/v1.9.1/zephyr/drivers/console/uart_console.c \
+zephyr/drivers/sensor/hts221/CMakeFiles/drivers__sensor__hts221.dir/hts221.c.obj: \
+ C:/Users/difo/ncs/v1.9.1/zephyr/drivers/sensor/hts221/hts221.c \
  C:/Users/difo/ncs/v1.9.1/zephyr/samples/bluetooth/peripheral/build_thingy52_nrf52832/zephyr/include/generated/autoconf.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/toolchain/zephyr_stdint.h \
- ../../../../include/kernel.h ../../../../include/kernel_includes.h \
+ ../../../../include/drivers/i2c.h ../../../../include/zephyr/types.h \
  c:\users\difo\ncs\v1.9.1\toolchain\opt\lib\gcc\arm-none-eabi\9.2.1\include\stddef.h \
- ../../../../include/zephyr/types.h \
  ../../../../lib/libc/minimal/include/stdint.h \
- ../../../../lib/libc/minimal/include/limits.h \
+ ../../../../include/device.h ../../../../include/init.h \
  ../../../../include/toolchain.h ../../../../include/toolchain/gcc.h \
  ../../../../include/toolchain/common.h \
  ../../../../lib/libc/minimal/include/stdbool.h \
+ ../../../../include/kernel.h ../../../../include/kernel_includes.h \
+ ../../../../lib/libc/minimal/include/limits.h \
  ../../../../include/linker/sections.h \
  ../../../../include/linker/section_tags.h \
  ../../../../include/sys/atomic.h ../../../../include/sys/util_macro.h \
@@ -107,15 +108,33 @@ zephyr/drivers/console/CMakeFiles/drivers__console.dir/uart_console.c.obj: \
  ../../../../include/tracing/tracing.h \
  ../../../../include/tracing/tracking.h \
  zephyr/include/generated/syscalls/kernel.h \
- ../../../../lib/libc/minimal/include/stdio.h \
- ../../../../lib/libc/minimal/include/ctype.h \
- ../../../../include/device.h ../../../../include/init.h \
  ../../../../include/sys/device_mmio.h \
  ../../../../include/sys/mem_manage.h \
  zephyr/include/generated/syscalls/mem_manage.h \
  zephyr/include/generated/device_extern.h \
  zephyr/include/generated/syscalls/device.h \
- ../../../../include/drivers/uart.h \
- zephyr/include/generated/syscalls/uart.h \
- ../../../../include/drivers/console/console.h \
- ../../../../include/drivers/console/uart_console.h
+ zephyr/include/generated/syscalls/i2c.h \
+ ../../../../include/sys/byteorder.h \
+ ../../../../lib/libc/minimal/include/string.h \
+ ../../../../include/logging/log.h \
+ ../../../../include/logging/log_instance.h \
+ ../../../../include/logging/log_core.h \
+ ../../../../include/logging/log_msg.h \
+ ../../../../include/logging/log_msg2.h \
+ ../../../../include/sys/mpsc_packet.h ../../../../include/sys/cbprintf.h \
+ ../../../../include/sys/cbprintf_internal.h \
+ ../../../../include/sys/cbprintf_cxx.h \
+ zephyr/include/generated/syscalls/log_msg2.h \
+ zephyr/include/generated/syscalls/log_core.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/drivers/sensor/hts221/hts221.h \
+ ../../../../drivers/sensor/hts221/../stmemsc/stmemsc.h \
+ ../../../../include/drivers/spi.h \
+ ../../../../include/dt-bindings/spi/spi.h \
+ ../../../../include/drivers/gpio.h \
+ ../../../../include/dt-bindings/gpio/gpio.h \
+ zephyr/include/generated/syscalls/gpio.h \
+ zephyr/include/generated/syscalls/spi.h \
+ ../../../../include/drivers/sensor.h \
+ zephyr/include/generated/syscalls/sensor.h \
+ C:/Users/difo/ncs/v1.9.1/modules/hal/st/sensor/stmemsc/hts221_STdC/driver/hts221_reg.h \
+ ../../../../lib/libc/minimal/include/math.h

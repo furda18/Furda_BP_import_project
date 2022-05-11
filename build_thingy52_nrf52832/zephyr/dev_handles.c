@@ -17,11 +17,11 @@ __devicehdl_DT_N_S_soc_S_clock_40000000[] = { DEVICE_HANDLE_SEP, DEVICE_HANDLE_S
  *   - /vdd-pwr-ctrl
  *   - (/buttons/button_0)
  *   - (/soc/i2c@40003000/ccs811@5a)
- *   - (/soc/i2c@40003000/hts221@5f)
+ *   - /soc/i2c@40003000/hts221@5f
  *   - (/soc/i2c@40004000/lis2dh12@19)
  */
 const device_handle_t __aligned(2) __attribute__((__section__(".__device_handles_pass2")))
-__devicehdl_DT_N_S_soc_S_gpio_50000000[] = { DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP, 13, 14, DEVICE_HANDLE_ENDS };
+__devicehdl_DT_N_S_soc_S_gpio_50000000[] = { DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP, 13, 14, 16, DEVICE_HANDLE_ENDS };
 
 /* 3 : /soc/random@4000d000:
  * Direct Dependencies:
@@ -69,12 +69,12 @@ __devicehdl_DT_N_S_soc_S_i2c_40004000[] = { DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP
  *   - (/soc/interrupt-controller@e000e100)
  * Supported:
  *   - (/soc/i2c@40003000/ccs811@5a)
- *   - (/soc/i2c@40003000/hts221@5f)
+ *   - /soc/i2c@40003000/hts221@5f
  *   - (/soc/i2c@40003000/lps22hb_press@5c)
  *   - /soc/i2c@40003000/sx1509b@3e
  */
 const device_handle_t __aligned(2) __attribute__((__section__(".__device_handles_pass2")))
-__devicehdl_DT_N_S_soc_S_i2c_40003000[] = { DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP, 9, DEVICE_HANDLE_ENDS };
+__devicehdl_DT_N_S_soc_S_i2c_40003000[] = { DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP, 9, 16, DEVICE_HANDLE_ENDS };
 
 /* 9 : /soc/i2c@40003000/sx1509b@3e:
  * Direct Dependencies:
@@ -132,14 +132,23 @@ __devicehdl_DT_N_S_spk_pwr_ctrl[] = { 2, DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP, D
  *   - (/)
  *   - /soc/gpio@50000000
  * Supported:
- *   - (/soc/i2c@40003000/hts221@5f)
+ *   - /soc/i2c@40003000/hts221@5f
  *   - (/soc/i2c@40003000/lps22hb_press@5c)
  *   - /soc/i2c@40003000/sx1509b@3e
  */
 const device_handle_t __aligned(2) __attribute__((__section__(".__device_handles_pass2")))
-__devicehdl_DT_N_S_vdd_pwr_ctrl[] = { 2, DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP, 9, DEVICE_HANDLE_ENDS };
+__devicehdl_DT_N_S_vdd_pwr_ctrl[] = { 2, DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP, 16, 9, DEVICE_HANDLE_ENDS };
 
 /* 15 : sysinit:
  */
 const device_handle_t __aligned(2) __attribute__((__section__(".__device_handles_pass2")))
 __devicehdl_ccs_vdd_pwr_ctrl_init[] = { DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP, DEVICE_HANDLE_ENDS };
+
+/* 16 : /soc/i2c@40003000/hts221@5f:
+ * Direct Dependencies:
+ *   - /vdd-pwr-ctrl
+ *   - /soc/gpio@50000000
+ *   - /soc/i2c@40003000
+ */
+const device_handle_t __aligned(2) __attribute__((__section__(".__device_handles_pass2")))
+__devicehdl_DT_N_S_soc_S_i2c_40003000_S_hts221_5f[] = { 14, 2, 8, DEVICE_HANDLE_SEP, DEVICE_HANDLE_SEP, DEVICE_HANDLE_ENDS };

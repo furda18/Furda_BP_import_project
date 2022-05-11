@@ -4,13 +4,12 @@ CMakeFiles/app.dir/src/main.c.obj: ../src/main.c \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/zephyr/types.h \
  c:\users\difo\ncs\v1.9.1\toolchain\opt\lib\gcc\arm-none-eabi\9.2.1\include\stddef.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/stdint.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/string.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/errno.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/errno_private.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/toolchain.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/toolchain/gcc.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/toolchain/common.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/stdbool.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/errno.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/errno_private.h \
  zephyr/include/generated/syscalls/errno_private.h \
  zephyr/include/generated/syscall_list.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/syscall.h \
@@ -23,21 +22,27 @@ CMakeFiles/app.dir/src/main.c.obj: ../src/main.c \
  C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/inttypes.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/byteorder.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/__assert.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/settings/settings.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/sys/types.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/sys/_types.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/util.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/util_macro.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/util_internal.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/util_loops.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/slist.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/list_gen.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/bluetooth/bluetooth.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/string.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/net/buf.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/zephyr.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/kernel.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/kernel_includes.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/limits.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/atomic.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/util_macro.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/util_internal.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/util_loops.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/atomic_builtin.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/kernel/sched_priq.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/util.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/dlist.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/rb.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/slist.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/list_gen.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/sflist.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/kernel_structs.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/sys_heap.h \
@@ -124,11 +129,6 @@ CMakeFiles/app.dir/src/main.c.obj: ../src/main.c \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/tracing/tracing.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/tracing/tracking.h \
  zephyr/include/generated/syscalls/kernel.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/settings/settings.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/sys/types.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/sys/_types.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/bluetooth/bluetooth.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/net/buf.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/bluetooth/gap.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/bluetooth/addr.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/bluetooth/crypto.h \
