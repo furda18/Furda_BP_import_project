@@ -264,7 +264,8 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 struct Logic_deciderss{
           int logic_value;
           char* logic_name;        
-}first_byte[5], second_byte[5];
+}first_byte[5], second_byte[5], sixth_byte[5];
+//define dame nech je kto krajsie
 
 
 //decider[20]
@@ -373,20 +374,14 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
             led_verification_t = true;
           }
         }
-        
-
-        
-        
-       
+    
+  
        int position_in_byte = -1;
-
-
-
 
        //Vzorova = 
        if(led_verification_t == true){
-            //total reset 00-00 config
-            if(value[0] == 0 && value[1] == 0 && value[2] == 0){
+            //total reset 00-00-00 config. ale presne v tejto dlzke
+            if(value[0] == 0 && value[1] == 0 && value[2] == 0 && value[3] == NULL){
               led_is_on_t = false;
               dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led0), gpios));
               ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led0), gpios));
@@ -399,209 +394,234 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
               dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led2), gpios));
               ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led2), gpios));
               gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
-            }       
-            //pravidla overujem s hodnotami
-            else{
-                        
-              //led_is_on_t = false;
-              //urcenie: led0,1,2 - RGB     
-              // zistim ktoru ledku chceme zapalit a zapametam si to
-              LOG_INF("Prvy cyklus dlzka: %d\n", sizeof(second_byte)/sizeof(second_byte[0]));
-              for(int ii=0; ii<sizeof(second_byte)/sizeof(second_byte[0]); ii++){
-                //najdeme ci sa value zhoduje s niecim v second_byte
-                //ak ano riesime s cim a co je vystup
+            }else{
+              
+              bool execute = true;
+
+              LOG_INF("Siesty cyklus dlzka: %d\n", sizeof(sixth_byte)/sizeof(sixth_byte[0]));
+              for(int ii=0; ii<sizeof(sixth_byte)/sizeof(sixth_byte[0]); ii++){
+                  //najdeme ci sa value zhoduje s niecim v sixth_byte
+                  //ak ano riesime s cim a co je vystup
+
+                if(sixth_byte[ii].logic_value == value[5]){
+                    position_in_byte = ii;
+                    LOG_INF("Position in byte: %d\n", position_in_byte);
+                  }                       
+              }
+              char* vystup6 = sixth_byte[position_in_byte].logic_name;
+
+              ////meraj teplotu = 1, humiditu = 2
+              if(vystup6 == "temperature_sensor" || vystup6 == "humidity_sensor"){
+
+                LOG_INF("okej ideme merat teplotu/humiditu\n");
+                
+                execute = false;
+                //led_is_on_t = true; 
+                const struct device *dev_sensor = device_get_binding("HTS221");
+                //const struct device *dev_t = device_get_binding(DT_LABEL(DT_INST(0, st_hts221)));
+
+                if (dev_sensor == NULL) {
+                        LOG_INF("Could not get HTS221 device\n");
+                        return;
+                }
+
+                if (IS_ENABLED(CONFIG_HTS221_TRIGGER)) {
+                        struct sensor_trigger trig = {
+                                .type = SENSOR_TRIG_DATA_READY,
+                                .chan = SENSOR_CHAN_ALL,
+                        };
+                        if (sensor_trigger_set(dev_sensor, &trig, hts221_handler) < 0) {
+                                LOG_INF("Cannot configure trigger\n");
+                                return;
+                        }
+                }
+              
+                static unsigned int obs;
+
+                struct sensor_value temp, hum;
+                if (sensor_sample_fetch(dev_sensor) < 0) {
+                        LOG_INF("Sensor sample update error\n");
+                        return;
+                }
+
+                if (sensor_channel_get(dev_sensor, SENSOR_CHAN_AMBIENT_TEMP, &temp) < 0) {
+                        LOG_INF("Cannot read HTS221 temperature channel\n");
+                        return;
+                }
+
+                if (sensor_channel_get(dev_sensor, SENSOR_CHAN_HUMIDITY, &hum) < 0) {
+                        LOG_INF("Cannot read HTS221 humidity channel\n");
+                        return;
+                }
+              
+                ++obs;
+                LOG_INF("Observation:%u\n", obs);
+              
+                int sensor_value;
+                if(vystup6 == "temperature_sensor"){
+                  /* display temperature */
+                  LOG_INF("1Temperature:%d C\n", temp.val1);
+                  sensor_value = temp.val1;
+                }
+              
+                 if(vystup6 == "humidity_sensor"){
+                  /* display humidity */
+                  LOG_INF("1Relative Humidity:%d %%\n", hum.val1);
+                  sensor_value = hum.val1;
+                }
+
+              
+                //zlomovy bod - osetri
+                int break_point = value[6];
+                LOG_INF("Breaking point: %d\n", break_point); 
+                //kladny=1 zaporny=2
+                int positivity = value[7];
+                LOG_INF("Plus(1)/Minus(2): %d\n", positivity); 
+                if(positivity == 2){
+                  sensor_value = sensor_value*(-1);
+                }
+              
+                int reaction_is = value[8];
+                LOG_INF("Sensor value: %d vs\n",sensor_value);
+              
+          
+                //same
+                if(reaction_is == 0){
+                  LOG_INF("0ROVNAKO\n");
+                  if(sensor_value == break_point){
+                    execute = true;
+                    LOG_INF("ROVNAKO\n");
+                  }
+                }
+                //more
+                if(reaction_is == 1){
+                  LOG_INF("0VIAC\n");
+                  if(sensor_value > break_point){
+                    execute = true;
+                    LOG_INF("VIAC\n");
+                  }
+                }
+                //less
+                if(reaction_is == 2){
+                  LOG_INF("0MENEJ\n");
+                  if(sensor_value < break_point){
+                    execute = true;
+                    LOG_INF("MENEJ\n");
+                  }
+                }
+                LOG_INF("Same{0)/More(1)/Less(2): %d\n", reaction_is);
+              }
+              
+
+              
+              if(execute == true){       
+                //led_is_on_t = false;
+                //urcenie: led0,1,2 - RGB     
+                // zistim ktoru ledku chceme zapalit a zapametam si to
+                LOG_INF("Prvy cyklus dlzka: %d\n", sizeof(second_byte)/sizeof(second_byte[0]));
+                for(int ii=0; ii<sizeof(second_byte)/sizeof(second_byte[0]); ii++){
+                  //najdeme ci sa value zhoduje s niecim v second_byte
+                  //ak ano riesime s cim a co je vystup
 
                 if(second_byte[ii].logic_value == value[1]){
-                  position_in_byte = ii;
-                  LOG_INF("Position in byte: %d\n", position_in_byte);
-                }                       
-              }
+                    position_in_byte = ii;
+                    LOG_INF("Position in byte: %d\n", position_in_byte);
+                  }                       
+                }
           
-              char* vystup = second_byte[position_in_byte].logic_name;
+                char* vystup = second_byte[position_in_byte].logic_name;
 
-              LOG_INF("Pravidlo sa naslo: %s\n", vystup);
+                LOG_INF("Pravidlo sa naslo: %s\n", vystup);
 
-              if(position_in_byte == -1){
-                  LOG_ERR("Ziadna zhoda v 2. bajte (value[1])\n");
-              }
+                if(position_in_byte == -1){
+                    LOG_ERR("Ziadna zhoda v 2. bajte (value[1])\n");
+                }
 
-              if(vystup == "set_led0"){
-                printk("config 1, led 0\n");
-                dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led0), gpios));
-                ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led0), gpios));
-                gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
-              }
-              if(vystup == "set_led1"){
-                printk("config 2, led 1\n");
-                dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led1), gpios));
-                ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led1), gpios));       
-                gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
-              }
-              if(vystup == "set_led2"){               
-                printk("config 3, led 2\n");
-                dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led2), gpios));
-                ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led2), gpios));
-                gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
-              }
+                if(vystup == "set_led0"){
+                  printk("config 1, led 0\n");
+                  dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led0), gpios));
+                  ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led0), gpios));
+                  gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
+                }
+                if(vystup == "set_led1"){
+                  printk("config 2, led 1\n");
+                  dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led1), gpios));
+                  ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led1), gpios));       
+                  gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
+                }
+                if(vystup == "set_led2"){               
+                  printk("config 3, led 2\n");
+                  dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led2), gpios));
+                  ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led2), gpios));
+                  gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
+                }
             
 
-              if (dev_t == NULL){return;}
+                if (dev_t == NULL){return;}
       
-              if (ret_t < 0){return;}
+                if (ret_t < 0){return;}
             
-              //teraz testujeme prvy bajt, kde sa riesi zap/vypnutie/blikanie
-              int position_in_byte0 = -1;
+                //teraz testujeme prvy bajt, kde sa riesi zap/vypnutie/blikanie
+                int position_in_byte0 = -1;
 
-              LOG_INF("Druhy cyklus dlzka: %d\n", sizeof(first_byte)/sizeof(first_byte[0]));
+                LOG_INF("Druhy cyklus dlzka: %d\n", sizeof(first_byte)/sizeof(first_byte[0]));
               
-              for(int ii=0; ii<sizeof(first_byte)/sizeof(first_byte[0]); ii++){
-                if(first_byte[ii].logic_value == value[1]){
-                    position_in_byte0 = ii;
-                    LOG_INF("Position in byte: %d\n", position_in_byte0);
-                  }
-              }
-
-              if(position_in_byte0 == -1){
-                    LOG_ERR("Ziadna zhoda v 1. bajte (value[0])\n");
-               }
-              char* vystup0 = first_byte[position_in_byte0].logic_name;
-
-
-              if(vystup0 == "turn_off"){
-                led_is_on_t = false;
-                LOG_INF("turning led off\n");                                     
-              }
-
-              //zapni
-              if(vystup0 == "turn_on"){
-                led_is_on_t = true;
-                LOG_INF("turning led on\n");           
-                                         
-              }
-           
-
-              //blikaj
-              if(vystup0 == "blink_led"){
-
-                    LOG_INF("Bliknut ma %d krat\n", value[2]);
-                    int counter = 0;
-                  
-                    while(counter < value[2]){
-                      led_is_on_t = !led_is_on_t;
-                      LOG_INF("sleep time: %d decisecond)\n", value[3]*10000);
-                      LOG_INF("sleep time: %d miliseconds\n", value[4]*100);
-
-                      k_msleep((value[4]*100));
-                      k_msleep((value[3]*10000));
-
-                      if(vystup == "set_led0"){
-                       gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
-                      }
-                      if(vystup == "set_led1"){
-                       gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
-                      }
-                      if(vystup == "set_led2"){               
-                        gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
-                      }
-                      counter++;
+                for(int ii=0; ii<sizeof(first_byte)/sizeof(first_byte[0]); ii++){
+                  if(first_byte[ii].logic_value == value[1]){
+                      position_in_byte0 = ii;
+                      LOG_INF("Position in byte: %d\n", position_in_byte0);
                     }
-                    //gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
+                }
+
+                if(position_in_byte0 == -1){
+                      LOG_ERR("Ziadna zhoda v 1. bajte (value[0])\n");
+                 }
+                char* vystup0 = first_byte[position_in_byte0].logic_name;
+
+                if(vystup0 == "turn_off"){
+                  led_is_on_t = false;
+                  LOG_INF("turning led off\n");                                     
+                }
+
+                //zapni
+                if(vystup0 == "turn_on"){
+                  led_is_on_t = true;
+                  LOG_INF("turning led on\n");                                             
+                }
+                 //blikaj
+                if(vystup0 == "blink_led"){
+
+                      LOG_INF("Bliknut ma %d krat\n", value[2]);
+                      int counter = 0;
+                  
+                      while(counter < value[2]){
+                        led_is_on_t = !led_is_on_t;
+                        LOG_INF("sleep time: %d decisecond)\n", value[3]*10000);
+                        LOG_INF("sleep time: %d miliseconds\n", value[4]*100);
+
+                        k_msleep((value[4]*100));
+                        k_msleep((value[3]*10000));
+
+                        if(vystup == "set_led0"){
+                         gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
+                        }
+                        if(vystup == "set_led1"){
+                         gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
+                        }
+                        if(vystup == "set_led2"){               
+                          gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
+                        }
+                        counter++;
+                      }
+                      //gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
+                }
+
+             //execute if
               }
-          //idk dve 
+          //else not 00-00-00                
           }
-          }
-            
-            ////meraj teplotu = 1, humiditu = 2
-            //if(value[5] == 1 || value[5] == 2){
-              
-            //  //led_is_on_t = true; 
-            //  //const struct device *dev_t = device_get_binding("HTS221");
-            //  const struct device *dev_t = device_get_binding(DT_LABEL(DT_INST(0, st_hts221)));
-
-            //  if (dev_t == NULL) {
-            //          LOG_INF("Could not get HTS221 device\n");
-            //          return;
-            //  }
-
-            //  if (IS_ENABLED(CONFIG_HTS221_TRIGGER)) {
-            //          struct sensor_trigger trig = {
-            //                  .type = SENSOR_TRIG_DATA_READY,
-            //                  .chan = SENSOR_CHAN_ALL,
-            //          };
-            //          if (sensor_trigger_set(dev_t, &trig, hts221_handler) < 0) {
-            //                  LOG_INF("Cannot configure trigger\n");
-            //                  return;
-            //          }
-            //  }
-              
-            //  static unsigned int obs;
-
-            //  struct sensor_value temp, hum;
-            //  if (sensor_sample_fetch(dev_t) < 0) {
-            //          LOG_INF("Sensor sample update error\n");
-            //          return;
-            //  }
-
-            //  if (sensor_channel_get(dev_t, SENSOR_CHAN_AMBIENT_TEMP, &temp) < 0) {
-            //          LOG_INF("Cannot read HTS221 temperature channel\n");
-            //          return;
-            //  }
-
-            //  if (sensor_channel_get(dev_t, SENSOR_CHAN_HUMIDITY, &hum) < 0) {
-            //          LOG_INF("Cannot read HTS221 humidity channel\n");
-            //          return;
-            //  }
-
-            //  ++obs;
-            //  LOG_INF("Observation:%u\n", obs);
-
-            //  /* display temperature */
-            //  LOG_INF("1Temperature:%d C\n", temp.val1);
-              
-
-            //  /* display humidity */
-            //  LOG_INF("1Relative Humidity:%d %%\n", hum.val1);
-             
-
-            //  //zlomovy bod - osetri
-            //  int break_point = value[6];
-            //  LOG_INF("Breaking point: %d\n", break_point); 
-            //  //kladny=1 zaporny=2
-            //  int positivity = value[7];
-            //  LOG_INF("Plus(1)/Minus(2): %d\n", positivity); 
-              
-            //  int reaction_is = value[8];
-            //  LOG_INF("Same{0)/More(1)/Less(2): %d\n", reaction_is); 
-              
-
-
-            //  //if(hum.val1 > 56){
-            //  //  led_is_on_t = true; 
-            //  //  LOG_INF("MORE THAN 56, turing on");
-            //  //}
-            //  //if(hum.val1 < 56){
-            //  //  LOG_INF("less, led off");
-            //  //  led_is_on_t = false;
-            //  //  dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led0), gpios));
-            //  //  ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led0), gpios));
-            //  //  gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
-
-            //  //  dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led1), gpios));
-            //  //  ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led1), gpios));       
-            //  //  gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
-              
-            //  //  dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led2), gpios));
-            //  //  ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led2), gpios));
-            //  //  gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
-           
-            //  //}
-
-
-            //}
-
-            
-       
-        //}
+        //led verific
+        }
 
          
         
@@ -1249,11 +1269,11 @@ void main(void)
         second_byte[2].logic_name = "set_led2";
         second_byte[2].logic_value = 3;
 
-        //sixth_byte[0].logic_name = "temperature_sensor";
-        //sixth_byte[0].logic_value = 1;
+        sixth_byte[0].logic_name = "temperature_sensor";
+        sixth_byte[0].logic_value = 1;
 
-        //sixth_byte[1].logic_name = "humidity_sensor";
-        //sixth_byte[1].logic_value = 2;
+        sixth_byte[1].logic_name = "humidity_sensor";
+        sixth_byte[1].logic_value = 2;
 
         //asddsa(decider);
 
