@@ -382,6 +382,7 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 
 
 
+
        //Vzorova = 
        if(led_verification_t == true){
             //total reset 00-00 config
@@ -398,17 +399,12 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
               dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led2), gpios));
               ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led2), gpios));
               gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
-            }
-            
-            
-           
+            }       
             //pravidla overujem s hodnotami
             else{
-                         
+                        
               //led_is_on_t = false;
-              //urcenie: led0,1,2 - RGB
-              
-              
+              //urcenie: led0,1,2 - RGB     
               // zistim ktoru ledku chceme zapalit a zapametam si to
               LOG_INF("Prvy cyklus dlzka: %d\n", sizeof(second_byte)/sizeof(second_byte[0]));
               for(int ii=0; ii<sizeof(second_byte)/sizeof(second_byte[0]); ii++){
@@ -418,22 +414,16 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
                 if(second_byte[ii].logic_value == value[1]){
                   position_in_byte = ii;
                   LOG_INF("Position in byte: %d\n", position_in_byte);
-                }
-                               
-               }
-
-             
-
-               
-
+                }                       
               }
+          
               char* vystup = second_byte[position_in_byte].logic_name;
 
-               LOG_INF("Pravidlo sa naslo: %s\n", vystup);
+              LOG_INF("Pravidlo sa naslo: %s\n", vystup);
 
-                 if(position_in_byte == -1){
+              if(position_in_byte == -1){
                   LOG_ERR("Ziadna zhoda v 2. bajte (value[1])\n");
-               }
+              }
 
               if(vystup == "set_led0"){
                 printk("config 1, led 0\n");
@@ -447,85 +437,79 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
                 ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led1), gpios));       
                 gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
               }
-              if(vystup == "set_led2"){
-                
+              if(vystup == "set_led2"){               
                 printk("config 3, led 2\n");
                 dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led2), gpios));
                 ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led2), gpios));
                 gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
               }
-            }
-
-            if (dev_t == NULL)
-            {
-                return;
-            }
-      
-            if (ret_t < 0)
-            {
-                return;
-            }
             
-            //teraz testujeme prvy bajt, kde sa riesi zap/vypnutie/blikanie
-            int position_in_byte0 = -1;
 
-            LOG_INF("Druhy cyklus dlzka: %d\n", sizeof(first_byte)/sizeof(first_byte[0]));
+              if (dev_t == NULL){return;}
+      
+              if (ret_t < 0){return;}
+            
+              //teraz testujeme prvy bajt, kde sa riesi zap/vypnutie/blikanie
+              int position_in_byte0 = -1;
+
+              LOG_INF("Druhy cyklus dlzka: %d\n", sizeof(first_byte)/sizeof(first_byte[0]));
               
-            for(int ii=0; ii<sizeof(first_byte)/sizeof(first_byte[0]); ii++){
-              if(first_byte[ii].logic_value == value[1]){
-                  position_in_byte0 = ii;
-                  LOG_INF("Position in byte: %d\n", position_in_byte0);
-                }
-            }
+              for(int ii=0; ii<sizeof(first_byte)/sizeof(first_byte[0]); ii++){
+                if(first_byte[ii].logic_value == value[1]){
+                    position_in_byte0 = ii;
+                    LOG_INF("Position in byte: %d\n", position_in_byte0);
+                  }
+              }
+
+              if(position_in_byte0 == -1){
+                    LOG_ERR("Ziadna zhoda v 1. bajte (value[0])\n");
+               }
+              char* vystup0 = first_byte[position_in_byte0].logic_name;
 
 
-            if(position_in_byte0 == -1){
-                  LOG_ERR("Ziadna zhoda v 1. bajte (value[0])\n");
-             }
-            char* vystup0 = first_byte[position_in_byte0].logic_name;
+              if(vystup0 == "turn_off"){
+                led_is_on_t = false;
+                LOG_INF("turning led off\n");                                     
+              }
 
-
-            if(vystup0 == "turn_off"){
-              led_is_on_t = false;
-              LOG_INF("turning led off\n");                                     
-            }
-
-            //zapni
-            if(vystup0 == "turn_on"){
-              led_is_on_t = true;
-              LOG_INF("turning led on\n");           
+              //zapni
+              if(vystup0 == "turn_on"){
+                led_is_on_t = true;
+                LOG_INF("turning led on\n");           
                                          
-            }
+              }
            
 
-            ////blikaj
-            //if(value[0] == 2){
+              //blikaj
+              if(vystup0 == "blink_led"){
 
-            //      LOG_INF("Bliknut ma %d krat\n", value[2]);
-            //      int counter = 0;
+                    LOG_INF("Bliknut ma %d krat\n", value[2]);
+                    int counter = 0;
                   
-            //      while(counter < value[2]){
-            //        led_is_on_t = !led_is_on_t;
-            //        LOG_INF("sleep time: %d decisecond)\n", value[3]*10000);
-            //        LOG_INF("sleep time: %d miliseconds\n", value[4]*100);
+                    while(counter < value[2]){
+                      led_is_on_t = !led_is_on_t;
+                      LOG_INF("sleep time: %d decisecond)\n", value[3]*10000);
+                      LOG_INF("sleep time: %d miliseconds\n", value[4]*100);
 
-            //        k_msleep((value[4]*100));
-            //        k_msleep((value[3]*10000));
+                      k_msleep((value[4]*100));
+                      k_msleep((value[3]*10000));
 
-            //        if(value[1] == 1){
-            //          gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
-            //        }
-            //        if(value[1] == 2){
-            //         gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
-            //        }
-            //        if(value[1] == 3){
-            //         gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
-            //        }
-            //        counter++;
-            //      }
-            //      //gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
-            //} 
-          
+                      if(vystup == "set_led0"){
+                       gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
+                      }
+                      if(vystup == "set_led1"){
+                       gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
+                      }
+                      if(vystup == "set_led2"){               
+                        gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
+                      }
+                      counter++;
+                    }
+                    //gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
+              }
+          //idk dve 
+          }
+          }
             
             ////meraj teplotu = 1, humiditu = 2
             //if(value[5] == 1 || value[5] == 2){
