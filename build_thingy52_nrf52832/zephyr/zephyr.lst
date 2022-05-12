@@ -26854,7 +26854,7 @@ static inline uint32_t log_const_source_id(
    1048a:	4c39      	ldr	r4, [pc, #228]	; (10570 <read_char2+0xec>)
    1048c:	4b39      	ldr	r3, [pc, #228]	; (10574 <read_char2+0xf0>)
         LOG_INF("len_of_value vs len: %d %d\n",len_of_value, len );
-   1048e:	4f3a      	ldr	r7, [pc, #232]	; (10578 <read_char2+0xf4>)
+   1048e:	4e3a      	ldr	r6, [pc, #232]	; (10578 <read_char2+0xf4>)
 	char *value = attr->user_data;
    10490:	f8d1 800c 	ldr.w	r8, [r1, #12]
    10494:	1ae4      	subs	r4, r4, r3
@@ -26869,10 +26869,10 @@ static inline uint32_t log_const_source_id(
    1049e:	f044 0303 	orr.w	r3, r4, #3
    104a2:	4836      	ldr	r0, [pc, #216]	; (1057c <read_char2+0xf8>)
 {         
-   104a4:	460e      	mov	r6, r1
+   104a4:	460f      	mov	r7, r1
    104a6:	4692      	mov	sl, r2
         LOG_INF("len_of_value vs len: %d %d\n",len_of_value, len );
-   104a8:	6839      	ldr	r1, [r7, #0]
+   104a8:	6831      	ldr	r1, [r6, #0]
    104aa:	462a      	mov	r2, r5
    104ac:	f013 ffc7 	bl	2443e <log_2>
         for (int i = 0; i < len_of_value; i++){
@@ -26883,7 +26883,7 @@ static inline uint32_t log_const_source_id(
         int counter = 0;
    104b8:	469b      	mov	fp, r3
         for (int i = 0; i < len_of_value; i++){
-   104ba:	6839      	ldr	r1, [r7, #0]
+   104ba:	6831      	ldr	r1, [r6, #0]
    104bc:	4299      	cmp	r1, r3
    104be:	dc2a      	bgt.n	10516 <read_char2+0x92>
         rc = nvs_read(&fs, KEY_ID, &key, sizeof(key));
@@ -26902,15 +26902,13 @@ static inline uint32_t log_const_source_id(
 		LOG_INF("Id: %d, THE Key is: ", KEY_ID);
    104d4:	f044 0203 	orr.w	r2, r4, #3
    104d8:	482d      	ldr	r0, [pc, #180]	; (10590 <read_char2+0x10c>)
+   104da:	2102      	movs	r1, #2
+   104dc:	f013 ff9b 	bl	24416 <log_1>
 		for (int n = 0; n < key; n++) {
-   104da:	4f2a      	ldr	r7, [pc, #168]	; (10584 <read_char2+0x100>)
-		LOG_INF("Id: %d, THE Key is: ", KEY_ID);
-   104dc:	2102      	movs	r1, #2
-   104de:	f013 ff9a 	bl	24416 <log_1>
-		for (int n = 0; n < key; n++) {
-   104e2:	2400      	movs	r4, #0
-   104e4:	683b      	ldr	r3, [r7, #0]
-   104e6:	482b      	ldr	r0, [pc, #172]	; (10594 <read_char2+0x110>)
+   104e0:	2400      	movs	r4, #0
+   104e2:	4a28      	ldr	r2, [pc, #160]	; (10584 <read_char2+0x100>)
+   104e4:	482b      	ldr	r0, [pc, #172]	; (10594 <read_char2+0x110>)
+   104e6:	6813      	ldr	r3, [r2, #0]
    104e8:	42a3      	cmp	r3, r4
    104ea:	d827      	bhi.n	1053c <read_char2+0xb8>
 		printk("\n");
@@ -26920,14 +26918,14 @@ static inline uint32_t log_const_source_id(
    104f2:	f1bb 0f03 	cmp.w	fp, #3
    104f6:	d026      	beq.n	10546 <read_char2+0xc2>
 	return bt_gatt_attr_read(conn, attr, buf, len, offset, value,
-   104f8:	2304      	movs	r3, #4
-   104fa:	e9cd 8301 	strd	r8, r3, [sp, #4]
-   104fe:	f8bd 3040 	ldrh.w	r3, [sp, #64]	; 0x40
-   10502:	9300      	str	r3, [sp, #0]
-   10504:	9804      	ldr	r0, [sp, #16]
-   10506:	462b      	mov	r3, r5
-   10508:	4652      	mov	r2, sl
-   1050a:	4631      	mov	r1, r6
+   104f8:	8833      	ldrh	r3, [r6, #0]
+   104fa:	9804      	ldr	r0, [sp, #16]
+   104fc:	e9cd 8301 	strd	r8, r3, [sp, #4]
+   10500:	f8bd 3040 	ldrh.w	r3, [sp, #64]	; 0x40
+   10504:	9300      	str	r3, [sp, #0]
+   10506:	4652      	mov	r2, sl
+   10508:	462b      	mov	r3, r5
+   1050a:	4639      	mov	r1, r7
    1050c:	f016 f8d0 	bl	266b0 <bt_gatt_attr_read>
 }
    10510:	b007      	add	sp, #28
@@ -26956,32 +26954,29 @@ static inline uint32_t log_const_source_id(
    1053e:	f014 fdcc 	bl	250da <printk>
 		for (int n = 0; n < key; n++) {
    10542:	3401      	adds	r4, #1
-   10544:	e7ce      	b.n	104e4 <read_char2+0x60>
+   10544:	e7cd      	b.n	104e2 <read_char2+0x5e>
            printk("00-00-00 configuration, rewriting for key! \n");
    10546:	4816      	ldr	r0, [pc, #88]	; (105a0 <read_char2+0x11c>)
               value[i] = key[i];
-   10548:	4f0e      	ldr	r7, [pc, #56]	; (10584 <read_char2+0x100>)
-              printk("%x to %x ", value[i], key[i]);
-   1054a:	f8df b058 	ldr.w	fp, [pc, #88]	; 105a4 <read_char2+0x120>
+   10548:	f8df b038 	ldr.w	fp, [pc, #56]	; 10584 <read_char2+0x100>
            printk("00-00-00 configuration, rewriting for key! \n");
-   1054e:	f014 fdc4 	bl	250da <printk>
+   1054c:	f014 fdc5 	bl	250da <printk>
            for (int i = 0; i < len; i++){           
-   10552:	2400      	movs	r4, #0
-   10554:	42ac      	cmp	r4, r5
+   10550:	2400      	movs	r4, #0
+   10552:	42ac      	cmp	r4, r5
+   10554:	4813      	ldr	r0, [pc, #76]	; (105a4 <read_char2+0x120>)
    10556:	dacf      	bge.n	104f8 <read_char2+0x74>
               value[i] = key[i];
-   10558:	683b      	ldr	r3, [r7, #0]
-   1055a:	5d19      	ldrb	r1, [r3, r4]
-   1055c:	f808 1004 	strb.w	r1, [r8, r4]
+   10558:	f8db 3000 	ldr.w	r3, [fp]
+   1055c:	5d19      	ldrb	r1, [r3, r4]
+   1055e:	f808 1004 	strb.w	r1, [r8, r4]
               printk("%x to %x ", value[i], key[i]);
-   10560:	683b      	ldr	r3, [r7, #0]
-   10562:	4658      	mov	r0, fp
-   10564:	5d1a      	ldrb	r2, [r3, r4]
-   10566:	f014 fdb8 	bl	250da <printk>
+   10562:	f8db 3000 	ldr.w	r3, [fp]
+   10566:	5d1a      	ldrb	r2, [r3, r4]
+   10568:	f014 fdb7 	bl	250da <printk>
            for (int i = 0; i < len; i++){           
-   1056a:	3401      	adds	r4, #1
-   1056c:	e7f2      	b.n	10554 <read_char2+0xd0>
-   1056e:	bf00      	nop
+   1056c:	3401      	adds	r4, #1
+   1056e:	e7f0      	b.n	10552 <read_char2+0xce>
    10570:	00029374 	.word	0x00029374
    10574:	0002936c 	.word	0x0002936c
    10578:	200022a4 	.word	0x200022a4

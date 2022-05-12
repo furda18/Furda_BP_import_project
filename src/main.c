@@ -267,7 +267,7 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
            }
         }    
 	return bt_gatt_attr_read(conn, attr, buf, len, offset, value,
-				 sizeof(signed_value2));
+				 len_of_value);
        
 }
 
