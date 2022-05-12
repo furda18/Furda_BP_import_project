@@ -141,7 +141,9 @@ CMakeFiles/app.dir/src/main.c.obj: ../src/main.c \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/bluetooth/att.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/bluetooth/services/bas.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/bluetooth/services/hrs.h \
- ../src/cts.h C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/reboot.h \
+ ../src/cts.h ../src/my_solution.c ../src/my_solution.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/stdio.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/reboot.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/device.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/init.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/device_mmio.h \
@@ -157,7 +159,6 @@ CMakeFiles/app.dir/src/main.c.obj: ../src/main.c \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/dt-bindings/gpio/gpio.h \
  zephyr/include/generated/syscalls/gpio.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/stdlib.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/stdio.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/time.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/sys/_timespec.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/drivers/sensor.h \
