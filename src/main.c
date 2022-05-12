@@ -226,6 +226,7 @@ static struct bt_gatt_cep vnd_long_cep = {
 static int signed_value;
 static int signed_value1;
 static int signed_value2;
+static int len_of_value;
 
 
 
@@ -234,9 +235,14 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 {         
         /* bolo const char, ale idk*/
 	char *value = attr->user_data;
+       
+
+       
+        LOG_INF("len_of_value vs len: %d %d\n",len_of_value, len );
         /*ak by som dal, ze vsetky value su 0, tak by mi to zapisalo za value key*/
         int counter = 0;
-        for (int i = 0; i < len; i++){
+
+        for (int i = 0; i < len_of_value; i++){
           printf("value[%d] = ", i);
           printf("%" PRIx32 "\n", value[i]);   
           if(value[i] == 0){
@@ -253,9 +259,9 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 		printk("\n");
         }
 
-        if(counter == 4){
-           printk("00-00-00-00 configuration, rewriting for key! \n");
-           for (int i = 0; i < 4; i++){           
+        if(counter == 3){
+           printk("00-00-00 configuration, rewriting for key! \n");
+           for (int i = 0; i < len; i++){           
               value[i] = key[i];
               printk("%x to %x ", value[i], key[i]);
            }
@@ -312,6 +318,7 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
         
         //}
         LOG_INF("DLZKA: %d\n", len);
+        len_of_value = len;
 	/* KEY_ID is used to store a key, lets see if we can read it from flash
 	 */
 	rc = nvs_read(&fs, KEY_ID, &key, sizeof(key));
