@@ -136,34 +136,6 @@ static struct bt_uuid_128 vnd_auth_uuid = BT_UUID_INIT_128(
 
 #define VND_MAX_LEN 20
 
-static uint8_t vnd_value[VND_MAX_LEN + 1] = { 'V', 'e', 'n', 'd', 'o', 'r'};
-static uint8_t vnd_auth_value[VND_MAX_LEN + 1] = { 'V', 'e', 'n', 'd', 'o', 'r'};
-static uint8_t vnd_wwr_value[VND_MAX_LEN + 1] = { 'V', 'e', 'n', 'd', 'o', 'r' };
-
-static ssize_t read_vnd(struct bt_conn *conn, const struct bt_gatt_attr *attr,
-			void *buf, uint16_t len, uint16_t offset)
-{
-	const char *value = attr->user_data;
-
-	return bt_gatt_attr_read(conn, attr, buf, len, offset, value,
-				 strlen(value));
-}
-
-static ssize_t write_vnd(struct bt_conn *conn, const struct bt_gatt_attr *attr,
-			 const void *buf, uint16_t len, uint16_t offset,
-			 uint8_t flags)
-{
-	uint8_t *value = attr->user_data;
-
-	if (offset + len > VND_MAX_LEN) {
-		return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
-	}
-
-	memcpy(value + offset, buf, len);
-	value[offset + len] = 0;
-
-	return len;
-}
 
 static uint8_t simulate_vnd;
 static uint8_t indicating;
@@ -186,35 +158,9 @@ static void indicate_destroy(struct bt_gatt_indicate_params *params)
 	indicating = 0U;
 }
 
-#define VND_LONG_MAX_LEN 74
-static uint8_t vnd_long_value[VND_LONG_MAX_LEN + 1] = {
-		  'V', 'e', 'n', 'd', 'o', 'r', ' ', 'd', 'a', 't', 'a', '1',
-		  'V', 'e', 'n', 'd', 'o', 'r', ' ', 'd', 'a', 't', 'a', '2',
-		  'V', 'e', 'n', 'd', 'o', 'r', ' ', 'd', 'a', 't', 'a', '3',
-		  'V', 'e', 'n', 'd', 'o', 'r', ' ', 'd', 'a', 't', 'a', '4',
-		  'V', 'e', 'n', 'd', 'o', 'r', ' ', 'd', 'a', 't', 'a', '5',
-		  'V', 'e', 'n', 'd', 'o', 'r', ' ', 'd', 'a', 't', 'a', '6',
-		  '.', ' ' };
 
-static ssize_t write_long_vnd(struct bt_conn *conn,
-			      const struct bt_gatt_attr *attr, const void *buf,
-			      uint16_t len, uint16_t offset, uint8_t flags)
-{
-	uint8_t *value = attr->user_data;
 
-	if (flags & BT_GATT_WRITE_FLAG_PREPARE) {
-		return 0;
-	}
 
-	if (offset + len > VND_LONG_MAX_LEN) {
-		return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
-	}
-
-	memcpy(value + offset, buf, len);
-	value[offset + len] = 0;
-
-	return len;
-}
 
 static const struct bt_uuid_128 vnd_long_uuid = BT_UUID_INIT_128(
 	BT_UUID_128_ENCODE(0x12345678, 0x1234, 0x5678, 0x1234, 0x56789abcdef3));
@@ -273,9 +219,9 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 
 // important part, user can define functions on his bytes
 struct Logic_deciderss{
-          int* logic_value;
+          int logic_value;
           char* logic_name;        
-}first_byte[5], second_byte[5], sixth_byte[5];
+}first_byte[3], second_byte[3], sixth_byte[3];
 //define dame nech je kto krajsie
 
 
@@ -419,8 +365,9 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
               
                 bool execute = true;
                 
-                LOG_INF("Sixth_byte %d %s\n", sixth_byte[1].logic_value, sixth_byte[1].logic_name); 
-                LOG_INF("2Sixth_byte %d %s\n", sixth_byte[2].logic_value, sixth_byte[2].logic_name); 
+                LOG_INF("1Sixth_byte %d %s\n", sixth_byte[1].logic_value, sixth_byte[1].logic_name); 
+                LOG_INF("2Sixth_byte %d %s\n", sixth_byte[2].logic_value, sixth_byte[2].logic_name);
+                LOG_INF("3Sixth_byte %d %s\n", sixth_byte[0].logic_value, sixth_byte[0].logic_name); 
                 //char* pokus60 = sixth_byte[0].logic_name;
                 //char* pokus61 = sixth_byte[1].logic_name;
                 //int pokus60_int, pokus61_int;
@@ -964,131 +911,6 @@ static ssize_t write_char1(struct bt_conn *conn, const struct bt_gatt_attr *attr
 }
 
 
-static ssize_t read_signed(struct bt_conn *conn, const struct bt_gatt_attr *attr,
-			   void *buf, uint16_t len, uint16_t offset)
-{         
-        /* bolo const char, ale idk*/
-	char *value = attr->user_data;
-               
-        /*cele definovanie som dal do globalu hore*/         
-
-
-        /*ak by som dal, ze vsetky value su 0, tak by mi to zapisalo za value key*/
-        int counter = 0;
-        for (int i = 0; i < 4; i++){
-          
-          printf("value[%d] = ", i);
-          printf("%" PRIx32 "\n", value[i]);   
-          if(value[i] == 0){
-            counter++;
-          }
-        
-        }
-    
-
-        rc = nvs_read(&fs, KEY_ID, &key, sizeof(key));
-        if (rc > 0) { /* item was found, show it */
-		printk("Id: %d, THE Key is: ", KEY_ID);
-		for (int n = 0; n < 4; n++) {
-			printk("%x ", key[n]);
-		}
-		printk("\n");
-
-        }
-
-        if(counter == 4){
-           printk("00-00-00-00 configuration, rewriting for key! \n");
-           for (int i = 0; i < 4; i++){
-                
-              value[i] = key[i];
-              printk("%x to %x ", value[i], key[i]);
-           }
-
-        }
-          
-	return bt_gatt_attr_read(conn, attr, buf, len, offset, value,
-				 sizeof(signed_value));
-
-        
-}
-
-static ssize_t write_signed(struct bt_conn *conn, const struct bt_gatt_attr *attr,
-			    const void *buf, uint16_t len, uint16_t offset,
-			    uint8_t flags)
-{
-	uint8_t *value = attr->user_data;
-   
-
-	if (offset + len > sizeof(signed_value)) {
-		return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
-	}
-
-	memcpy(value + offset, buf, len);
-        
-        
-        int lenlen = sizeof(value)/sizeof(value[0]);
-        printk("Length of written data is max: %d \n", lenlen);
-
-        for (int i = 0; i < 4; i++){
-          
-          printf("value[%d] = ", i);
-          printf("%" PRIx32 "\n", value[i]);   
-        
-        }
-
-	//flash_dev = FLASH_AREA_DEVICE(STORAGE_NODE_LABEL);
-	//if (!device_is_ready(flash_dev)) {
-	//	printk("Flash device %s is not ready\n", flash_dev->name);
-	//	return;
-	//}
-	//fs.offset = FLASH_AREA_OFFSET(storage);
-	//rc = flash_get_page_info_by_offs(flash_dev, fs.offset, &info);
-	//if (rc) {
-	//	printk("Unable to get page info\n");
-	//	return;
-	//}
-	//fs.sector_size = info.size;
-	//fs.sector_count = 3U;
-
-	//rc = nvs_init(&fs, flash_dev->name);
-	//if (rc) {
-	//	printk("Flash Init failed\n");
-	//	return;
-	//}
-	/* KEY_ID is used to store a key, lets see if we can read it from flash
-	 */
-	rc = nvs_read(&fs, KEY_ID, &key, sizeof(key));
-        if (rc > 0) { /* item was found, show it */
-		printk("Id: %d, OLD Key: ", KEY_ID);
-		for (int n = 0; n < 4; n++) {
-			printk("%x ", key[n]);
-		}
-		printk("\n");
-
-                /*new key*/
-                printk("NEW Key: ");
-		key[0] = value[0];
-		key[1] = value[1];
-		key[2] = value[2];
-		key[3] = value[3];
-
-		(void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
-		for (int n = 0; n < 4; n++) {
-			printk("%x ", key[n]);
-		}
-		printk("\n");
-	} else   {/* item was not found, add it */
-		printk("No key found, adding it at id %d\n", KEY_ID);
-		key[0] = value[0];
-		key[1] = value[1];
-		key[2] = value[2];
-		key[3] = value[3];
-		(void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
-	}
-         
-	return len;
-}
-
 static const struct bt_uuid_128 vnd_signed_uuid = BT_UUID_INIT_128(
 	BT_UUID_128_ENCODE(0x13345678, 0x1234, 0x5678, 0x1334, 0x56789abcdef9));
 
@@ -1249,33 +1071,6 @@ static struct bt_conn_auth_cb auth_cb_display = {
 	.cancel = auth_cancel,
 };
 
-static void bas_notify(void)
-{
-	uint8_t battery_level = bt_bas_get_battery_level();
-
-	battery_level--;
-
-	if (!battery_level) {
-		battery_level = 100U;
-	}
-
-	bt_bas_set_battery_level(battery_level);
-}
-
-static void hrs_notify(void)
-{
-	static uint8_t heartrate = 90U;
-
-	/* Heartrate measurements simulation */
-	heartrate++;
-	if (heartrate == 101U) {
-		heartrate = 90U;
-                //printk("Heartrate exceeded 100bpm\n");
-	}
-        
-
-	bt_hrs_notify(heartrate);
-}
 
 
 
@@ -1293,7 +1088,6 @@ void main(void)
         first_byte[1].logic_name = "turn_on";
         first_byte[1].logic_value = 1;
 
-        
         first_byte[2].logic_name = "blink_led";
         first_byte[2].logic_value = 2;
 
@@ -1306,6 +1100,10 @@ void main(void)
 
         second_byte[2].logic_name = "set_led2";
         second_byte[2].logic_value = 3;
+
+
+        sixth_byte[0].logic_name = "no_sensor_action";
+        sixth_byte[0].logic_value = 0;
 
         sixth_byte[1].logic_name = "temperature_sensor";
         sixth_byte[1].logic_value = 1;
@@ -1373,13 +1171,13 @@ void main(void)
 		k_sleep(K_SECONDS(1));
 
 		/* Current Time Service updates only when time is changed */
-		cts_notify();
+		//cts_notify();
 
-		/* Heartrate measurements simulation */
-		hrs_notify();
+		///* Heartrate measurements simulation */
+		//hrs_notify();
 
-		/* Battery level simulation */
-		bas_notify();
+		///* Battery level simulation */
+		//bas_notify();
 
 		/* Vendor indication simulation */
 		if (simulate_vnd && vnd_ind_attr) {
