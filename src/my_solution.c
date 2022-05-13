@@ -1,22 +1,10 @@
 #include "my_solution.h"    
 
 #include <stdio.h>
-
 #include <fs/nvs.h>
 
 
 
-
-
-#define KEY_IDs 1
-static struct nvs_fs fss;
-
-/*definovanie pamate, este navyse su tie reboot countery*/
-int rc = 0, cnt = 0, cnt_his = 0;
-uint8_t *key;
-uint32_t reboot_counter = 0U, reboot_counter_his;
-struct flash_pages_info info;
-const struct device *flash_dev;
 
 
 //https://www.quora.com/How-do-I-get-the-function-name-from-a-variable-in-C-I-am-passing-a-function-A-into-function-B-How-can-I-print-out-functions-A-name-from-function-B
@@ -28,7 +16,7 @@ const struct device *flash_dev;
 struct Logic_deciderss{
           int logic_value;
           char* logic_name;        
-}first_byte[5], second_byte[5], sixth_byte[5];
+}first_byte[5], second_byte[5], sixth_bytee[5];
 
 static int sixth_counter = 0;
 
@@ -51,12 +39,10 @@ int foo()
 
 //sem mi pride napriklad measure(temperature)
 void register_input(uint8_t hexvalue, char* information){
-  
-    sixth_byte[sixth_counter].logic_name = information;
-    sixth_byte[sixth_counter].logic_value = hexvalue;
+    sixth_bytee[sixth_counter].logic_name = information;
+    sixth_bytee[sixth_counter].logic_value = hexvalue;
     sixth_counter += 1;
 
-    
 }
 
 
@@ -67,24 +53,29 @@ void register_reaction(uint8_t hexvalue, void (*f)(void)){
   
 }
 
+//execute function which came here
+void execute_function_named(void (*f)(void)){
+    f();
+}
+
 //toto bude stale volane v maine
 //sem mi pride zakodovany (0x01, namerana_teplota );
 // vlastne to 0x01 mi povie ze ide o tepotu a nie humiditu
 //teraz 
 //precitaj a konaj podla zapisanej konfiguracie
-void resolve(*data, int namerana_hodnota, int namerana_hodnota_coho){
+void resolve(const struct bt_gatt_attr *attr, int namerana_hodnota, int namerana_hodnota_coho){
   
-  0 zapni
-  1 led0
-  2 blik 5x
-  3
-  4 kazdu sekundu
-  5 dajme tomu ze senzor nameral vsetky hodnoty, preto tu vieme, ze
-  ci riesime teplotu alebo humiditu
+  //0 zapni
+  //1 led0
+  //2 blik 5x
+  //3
+  //4 kazdu sekundu
+  //5 dajme tomu ze senzor nameral vsetky hodnoty, preto tu vieme, ze
+  //ci riesime teplotu alebo humiditu
 
-  6 zlomovy bod
-  7 +/-
-  8 <>=
+  //6 zlomovy bod
+  //7 +/-
+  //8 <>=
   
  // tu sa budu diat vsetky tie pravidla ostatne
   //tu potrebujem komplet konfiguraciu
@@ -106,8 +97,8 @@ void resolve(*data, int namerana_hodnota, int namerana_hodnota_coho){
 int measure(){
   //podla 6teho bajtu sa rozhodujes, ci je to teplota alebo humidita
   //teda porovnas to co doslo na inpute s tym aka je value
-  value[6] == 01{
-  meraj teplotu}
+  //value[6] == 01{
+  //meraj teplotu}
   return 0;
 }
 

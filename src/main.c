@@ -224,10 +224,10 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 }
 
 // important part, user can define functions on his bytes
-struct Logic_deciderss{
-          int logic_value;
-          char* logic_name;        
-}first_byte[3], second_byte[3], sixth_byte[3];
+//struct Logic_deciderss{
+//          int logic_value;
+//          char* logic_name;        
+//}first_byte[3], second_byte[3], sixth_byte[3];
 //define dame nech je kto krajsie
 
 
@@ -316,6 +316,12 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 	}
         
 
+        for(int a=0; a<2; a++){
+          LOG_INF("!!! \n %d. TAK NACITALO MI TO CONFIG: %d %s\ !!!\n ", a, sixth_bytee[a].logic_value, sixth_bytee[a].logic_name);
+        }
+
+        
+  
        // //OPAKOVANIA CONFIGOV ZACINAJU
        // int pocet_configov = (int)(len/9);
        // //alebo budem po 9 priratavat, ale ak sa to rovna, konci, ak nie ide aj s nedokoncenymi datami
@@ -1089,36 +1095,37 @@ void main(void)
 {         
         
         //Vseobecne zadefinovanie miesta vstupu a co predstavuje
-        
+        register_input(1,"temperature");
+        register_input(2,"humidity");
           
-        first_byte[0].logic_name = "turn_off";
-        first_byte[0].logic_value = 0;
+        //first_byte[0].logic_name = "turn_off";
+        //first_byte[0].logic_value = 0;
 
-        first_byte[1].logic_name = "turn_on";
-        first_byte[1].logic_value = 1;
+        //first_byte[1].logic_name = "turn_on";
+        //first_byte[1].logic_value = 1;
 
-        first_byte[2].logic_name = "blink_led";
-        first_byte[2].logic_value = 2;
-
-
-        second_byte[0].logic_name = "set_led0";
-        second_byte[0].logic_value = 1;
-
-        second_byte[1].logic_name = "set_led1";
-        second_byte[1].logic_value = 2;
-
-        second_byte[2].logic_name = "set_led2";
-        second_byte[2].logic_value = 3;
+        //first_byte[2].logic_name = "blink_led";
+        //first_byte[2].logic_value = 2;
 
 
-        sixth_byte[0].logic_name = "no_sensor_action";
-        sixth_byte[0].logic_value = 0;
+        //second_byte[0].logic_name = "set_led0";
+        //second_byte[0].logic_value = 1;
 
-        sixth_byte[1].logic_name = "temperature_sensor";
-        sixth_byte[1].logic_value = 1;
+        //second_byte[1].logic_name = "set_led1";
+        //second_byte[1].logic_value = 2;
 
-        sixth_byte[2].logic_name = "humidity_sensor";
-        sixth_byte[2].logic_value = 2;
+        //second_byte[2].logic_name = "set_led2";
+        //second_byte[2].logic_value = 3;
+
+
+        //sixth_byte[0].logic_name = "no_sensor_action";
+        //sixth_byte[0].logic_value = 0;
+
+        //sixth_byte[1].logic_name = "temperature_sensor";
+        //sixth_byte[1].logic_value = 1;
+
+        //sixth_byte[2].logic_name = "humidity_sensor";
+        //sixth_byte[2].logic_value = 2;
 
         //asddsa(decider);
 

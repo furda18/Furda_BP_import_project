@@ -143,7 +143,7 @@ CMakeFiles/app.dir/src/main.c.obj: ../src/main.c \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/bluetooth/services/hrs.h \
  ../src/cts.h ../src/my_solution.c ../src/my_solution.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/stdio.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/reboot.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/fs/nvs.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/device.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/init.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/device_mmio.h \
@@ -151,10 +151,10 @@ CMakeFiles/app.dir/src/main.c.obj: ../src/main.c \
  zephyr/include/generated/syscalls/mem_manage.h \
  zephyr/include/generated/device_extern.h \
  zephyr/include/generated/syscalls/device.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/reboot.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/drivers/flash.h \
  zephyr/include/generated/syscalls/flash.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/storage/flash_map.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/fs/nvs.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/drivers/gpio.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/dt-bindings/gpio/gpio.h \
  zephyr/include/generated/syscalls/gpio.h \
