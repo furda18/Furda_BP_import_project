@@ -16,10 +16,11 @@
 struct Logic_deciderss{
           int logic_value;
           char* logic_name;        
-}first_byte[5], second_byte[5], sixth_bytee[5];
+          void (*execute_function)(void);
+}first_byte[5], sixth_bytee[5];
 
 static int sixth_counter = 0;
-
+static int first_counter = 0;
 
                        
 //akcia a reakcia su jedna funkcia (navrh referencia)
@@ -48,9 +49,11 @@ void register_input(uint8_t hexvalue, char* information){
 
 //sem pride napriklad turn on led0
 void register_reaction(uint8_t hexvalue, void (*f)(void)){
-  //execute function which came here
-  f();
-  
+  //execute function which came here+
+    first_byte[first_counter].logic_name = f;
+    first_byte[first_counter].logic_value = hexvalue;
+    first_byte[first_counter].execute_function = &f;
+     
 }
 
 //execute function which came here
@@ -117,7 +120,8 @@ void led_handler(int led_index, bool activation){
 
 
 void turn_on_led0(){
-  led_handler(0, true);
+  //led_handler(0, true);
+  printf("\n\nHAHAHAHAHAHA som v turn_on_led0/n/n/n/");
 }
 
 void turn_on_led1(){
@@ -141,3 +145,56 @@ void turn_off_led1(){
 void turn_off_led2(){
   led_handler(2, false);
 }
+
+
+
+///
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <stdint.h>
+
+//struct Logic_deciderss{
+//          int logic_value;
+//          void* logic_name;
+
+//}first_byte[5], sixth_bytee[5];
+
+//static int first_counter = 0;
+
+//void register_reaction(uint8_t hexvalue, void (*f)()){
+//  //execute function which came here+
+//    first_byte[first_counter].logic_name = f;
+//    first_byte[first_counter].logic_value = hexvalue;
+//    first_counter++;
+//}
+
+//void turn_on_led0(){
+//    printf("TURNING led0 on");
+//}
+
+
+//int main()
+//{
+
+//    void (*fun_ptr)() = &turn_on_led0;
+
+
+
+//    register_reaction(1, fun_ptr);
+
+//    register_reaction(2, fun_ptr);
+
+
+//    for(int a=0; a<2; a++){
+//          printf("!!! \n %d. REACTION: %d \ !!!\n ", a, first_byte[a].logic_value);
+
+//          void (*fun_ptrr)() = first_byte[a].logic_name;
+//          fun_ptrr();
+//          //function_ole();
+//    }
+
+
+//    printf("Hello world!\n");
+//    return 0;
+//}
+///

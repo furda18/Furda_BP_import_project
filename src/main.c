@@ -238,6 +238,8 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 //    LOG_INF("FFFFFFFFFFF...%d %d\n", dd[0].a, dd[0].b);
 //}
 
+typedef void (*some_random_function)();
+
 static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 			    const void *buf, uint16_t len, uint16_t offset,
 			    uint16_t flags)
@@ -318,6 +320,12 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 
         for(int a=0; a<2; a++){
           LOG_INF("!!! \n %d. TAK NACITALO MI TO CONFIG: %d %s\ !!!\n ", a, sixth_bytee[a].logic_value, sixth_bytee[a].logic_name);
+        }
+
+        for(int a=0; a<2; a++){
+          LOG_INF("!!! \n %d. REACTION: %d %s\ !!!\n ", a, first_byte[a].logic_value, first_byte[a].logic_name);
+          sixth_bytee[a].execute_function();
+          //function_ole();
         }
 
         
@@ -1097,6 +1105,9 @@ void main(void)
         //Vseobecne zadefinovanie miesta vstupu a co predstavuje
         register_input(1,"temperature");
         register_input(2,"humidity");
+
+        register_reaction(1, *turn_on_led0);
+        //register_reaction(2, turn_on_led1());
           
         //first_byte[0].logic_name = "turn_off";
         //first_byte[0].logic_value = 0;
