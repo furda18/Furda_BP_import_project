@@ -259,7 +259,7 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
         LOG_INF("DLZKA: %d\n", len);
         value_written = value;
         value_written_length = len;
-
+        
 
 
         //mc.do_something();
@@ -335,6 +335,9 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
           //function_ole();
         }
 
+
+        //must be true to execute resolve
+        config_has_been_written = true;
         
   
        // //OPAKOVANIA CONFIGOV ZACINAJU
@@ -615,28 +618,28 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
        //                   k_msleep((value[4]*100));
        //                   k_msleep((value[3]*10000));
 
-       //                   if(vystup == "set_led0"){
-       //                    gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
-       //                   }
-       //                   if(vystup == "set_led1"){
-       //                    gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
-       //                   }
-       //                   if(vystup == "set_led2"){               
-       //                     gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
-       //                   }
-       //                   counter++;
-       //                 }
-       //                 //gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
-       //           }
+        //                   if(vystup == "set_led0"){
+        //                    gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
+        //                   }
+        //                   if(vystup == "set_led1"){
+        //                    gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
+        //                   }
+        //                   if(vystup == "set_led2"){
+        //                     gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
+        //                   }
+        //                   counter++;
+        //                 }
+        //                 //gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
+        //           }
 
-       //        //execute if
-       //         }
-       //     //else not 00-00-00                
-       //     }
-       //   //led verific
-       //   }
-       ////mulitople configs
-       //}
+        //        //execute if
+        //         }
+        //     //else not 00-00-00
+        //     }
+        //   //led verific
+        //   }
+        ////mulitople configs
+        //}
 
         
         
@@ -1219,5 +1222,4 @@ void main(void)
 
 
 }
-
 

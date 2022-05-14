@@ -27,6 +27,7 @@ struct Logic_deciderss {
 
 static int sixth_counter = 0;
 static int first_counter = 0;
+static bool config_has_been_written = false;
 
 // akcia a reakcia su jedna funkcia (navrh referencia)
 
@@ -56,38 +57,53 @@ void execute_function_named(void (*f)(void)) {
 // int namerana_hodnota, int namerana_hodnota_coho,
 void resolve(char *value_incoming, int value_incoming_length) {
 
+  if(config_has_been_written == false){
+    printf("No config written yet!\n");
+    return;
+  }
   printf("SOM V MOJOM RESOLVE\n");
   for (int i = 0; i < value_incoming_length; i++) {
     printf("..!!.. value_incoming[%d] = ", i);
     printf("%" PRIx32 "\n", value_incoming[i]);
   }
 
-  for (int i = 0; i < first_counter; i++) {
-    if (first_byte[i].logic_value == value_incoming[0]) {
-      printf("ZHODA %d %d\n", value_incoming[0], first_byte[i].logic_value);
-      void (*execute_this_function)() = first_byte[i].logic_name;
-
-      //este overim kolkokrat to zopakujem a v akom casovom intervale
-      execute_this_function();
+  int number_of_configs;
+  if (value_incoming_length < CONFIG_LENGTH) {
+    number_of_configs = 1;
+  } else {
+    number_of_configs = value_incoming_length / CONFIG_LENGTH;
+    if (number_of_configs % CONFIG_LENGTH != 0) {
+      number_of_configs += 1;
     }
   }
 
-
-  int number_of_configs;
-  if(value_incoming_length < CONFIG_LENGTH){
-    number_of_configs = 1;
-  }else{
-    number_of_configs = value_incoming_length/CONFIG_LENGTH;
-     if(number_of_configs % CONFIG_LENGTH != 0){
-       number_of_configs += 1;
-     }
-  }
-  
- 
-
   printf("Number of configs = %d / %d = %d\n", strlen(value_incoming), CONFIG_LENGTH, number_of_configs);
-  
-  // precitaj co je napisane v pamati
+
+  // id of first bye
+  int always_first_byte = 0;
+
+  // reading config after config
+  for (int iteration = 0; iteration < number_of_configs; iteration++) {
+    for (int i = 0; i < first_counter; i++) {
+      if (first_byte[i].logic_value == value_incoming[always_first_byte + 0]) {
+        printf("ZHODA %d %d\n", value_incoming[always_first_byte + 0], first_byte[i].logic_value);
+        void (*execute_this_function)() = first_byte[i].logic_name;
+        // how many times function should be executed
+        for (int repetition = 0; repetition < value_incoming[1]; repetition++) {
+          execute_this_function();
+          printf("Opakujem vykonanie funkcie\n");
+        }
+      }
+    }
+
+    // when we need time between executing configs
+    printf("value_incoming[%d]: sleep time: %d decisecond)\n", always_first_byte + 2, value_incoming[always_first_byte + 2] * 10000);
+    printf("value_incoming[%d]: sleep time: %d miliseconds\n", always_first_byte + 3, value_incoming[always_first_byte + 3] * 100);
+    k_msleep((value_incoming[always_first_byte + 2] * 10000));
+    k_msleep((value_incoming[always_first_byte + 3] * 100));
+
+    always_first_byte += CONFIG_LENGTH;
+  }
 
   // 0 zapni
   // 1 led0
@@ -174,7 +190,6 @@ void turn_off_led0() {
   dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led0), gpios));
   ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led0), gpios));
   gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
-
 }
 
 void turn_off_led1() {
@@ -185,7 +200,6 @@ void turn_off_led1() {
   dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led1), gpios));
   ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led1), gpios));
   gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
-
 }
 
 void turn_off_led2() {
@@ -196,6 +210,4 @@ void turn_off_led2() {
   dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led2), gpios));
   ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led2), gpios));
   gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
-
 }
-
