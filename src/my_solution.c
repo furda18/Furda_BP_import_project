@@ -5,19 +5,22 @@
 
 
 
-
-
 //https://www.quora.com/How-do-I-get-the-function-name-from-a-variable-in-C-I-am-passing-a-function-A-into-function-B-How-can-I-print-out-functions-A-name-from-function-B
 
 
 //momentalne iba 5 roznych instrukcii, mozno to je aj max dlzka bufferu idk
 
 
+struct Logic_deciders{
+         int logic_value;
+         void* logic_name;
+}first_byte[10];
+
+
 struct Logic_deciderss{
-          int logic_value;
-          char* logic_name;        
-          void (*execute_function)(void);
-}first_byte[5], sixth_bytee[5];
+         int logic_value;
+         char* logic_name;
+}sixth_bytee[5];
 
 static int sixth_counter = 0;
 static int first_counter = 0;
@@ -26,36 +29,19 @@ static int first_counter = 0;
 //akcia a reakcia su jedna funkcia (navrh referencia)
 
 
-int foo()
-{
-    int cislo = 999;
-    return cislo;
-}
-
-//void print_name_and_call(const char *name, void (*f)(void)) { 
-//  printf("Calling %s()\n", name); 
-//  f(); 
-//} 
-
-
 //sem mi pride napriklad measure(temperature)
 void register_input(uint8_t hexvalue, char* information){
     sixth_bytee[sixth_counter].logic_name = information;
     sixth_bytee[sixth_counter].logic_value = hexvalue;
-    sixth_counter += 1;
-
+    sixth_counter+=1;
 }
-
 
 //sem pride napriklad turn on led0
-void register_reaction(uint8_t hexvalue, void (*f)(void)){
-  //execute function which came here+
+void register_reaction(uint8_t hexvalue, void (*f)()){
     first_byte[first_counter].logic_name = f;
     first_byte[first_counter].logic_value = hexvalue;
-    first_byte[first_counter].execute_function = &f;
-     
+    first_counter+=1;
 }
-
 //execute function which came here
 void execute_function_named(void (*f)(void)){
     f();
@@ -66,8 +52,57 @@ void execute_function_named(void (*f)(void)){
 // vlastne to 0x01 mi povie ze ide o tepotu a nie humiditu
 //teraz 
 //precitaj a konaj podla zapisanej konfiguracie
-void resolve(const struct bt_gatt_attr *attr, int namerana_hodnota, int namerana_hodnota_coho){
+//int namerana_hodnota, int namerana_hodnota_coho,
+void resolve(char *value_incoming){
   
+  printf("SOM V MOJOM RESOLVE\n");
+  for (int i = 0; i < 2; i++)
+    {
+        printf("..!!.. value_incoming[%d] = ", i);
+        printf("%" PRIx32 "\n", value_incoming[i]);
+        
+    }
+  //precitaj co je napisane v pamati
+
+  
+  /////*Thingy kod*/
+  //const struct device *dev_t;
+  //bool led_is_on_t = true;
+  //int ret_t;
+
+  //bool led_verification_t = false;
+
+  //if(vystup == "set_led0"){
+  //  printk("config 1, led 0\n");
+  //  dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led0), gpios));
+  //  ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led0), gpios));
+  //  gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
+  //}
+  //     //           if(vystup == "set_led1"){
+  //     //             printk("config 2, led 1\n");
+  //     //             dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led1), gpios));
+  //     //             ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led1), gpios));       
+  //     //             gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
+  //     //           }
+  //     //           if(vystup == "set_led2"){               
+  //     //             printk("config 3, led 2\n");
+  //     //             dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led2), gpios));
+  //     //             ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led2), gpios));
+  //     //             gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
+  //     //           }
+
+  //     //if(vystup0 == "turn_off"){
+  //     //             led_is_on_t = false;
+  //     //             LOG_INF("turning led off\n");                                     
+  //     //           }
+
+  //    //zapni
+  //    if(vystup0 == "turn_on"){
+  //      led_is_on_t = true;
+  //      LOG_INF("turning led on\n");                                             
+  //    }
+
+
   //0 zapni
   //1 led0
   //2 blik 5x

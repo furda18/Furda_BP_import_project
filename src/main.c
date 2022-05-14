@@ -239,6 +239,8 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 //}
 
 typedef void (*some_random_function)();
+static char *value_written;
+
 
 static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 			    const void *buf, uint16_t len, uint16_t offset,
@@ -251,11 +253,11 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 	//uint8_t *value = attr->user_data;
         uint8_t *value = attr->user_data;
         uint8_t *stable_value = value;
-        
+        value_written = value;
         
        
         //mc.do_something();
-        LOG_INF("\nDOLEZITE!!! %d\\n \n", foo());
+        //LOG_INF("\nDOLEZITE!!! %d\\n \n", foo());
         //manualne obmedzenie na dlzku
 	//if (offset + len > sizeof(signed_value2)) {
  //               LOG_INF("BT_ATT_ERR_INVALID_OFFSET\n");
@@ -322,9 +324,10 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
           LOG_INF("!!! \n %d. TAK NACITALO MI TO CONFIG: %d %s\ !!!\n ", a, sixth_bytee[a].logic_value, sixth_bytee[a].logic_name);
         }
 
-        for(int a=0; a<2; a++){
-          LOG_INF("!!! \n %d. REACTION: %d %s\ !!!\n ", a, first_byte[a].logic_value, first_byte[a].logic_name);
-          sixth_bytee[a].execute_function();
+        for(int a=0; a<6; a++){
+          printf("!!! \n %d. REACTION: %d \ !!!\n ", a, first_byte[a].logic_value);
+          void (*fun_ptrr)() = first_byte[a].logic_name;
+          fun_ptrr();
           //function_ole();
         }
 
@@ -1106,43 +1109,25 @@ void main(void)
         register_input(1,"temperature");
         register_input(2,"humidity");
 
-        register_reaction(1, *turn_on_led0);
-        //register_reaction(2, turn_on_led1());
-          
-        //first_byte[0].logic_name = "turn_off";
-        //first_byte[0].logic_value = 0;
+        void (*led0_on)() = &turn_on_led0;
+        void (*led1_on)() = &turn_on_led1;
+        void (*led2_on)() = &turn_on_led2;
 
-        //first_byte[1].logic_name = "turn_on";
-        //first_byte[1].logic_value = 1;
+        void (*led0_off)() = &turn_off_led0;
+        void (*led1_off)() = &turn_off_led1;
+        void (*led2_off)() = &turn_off_led2;
 
-        //first_byte[2].logic_name = "blink_led";
-        //first_byte[2].logic_value = 2;
+        register_reaction(1, led0_on);
+        register_reaction(2, led1_on);
+        register_reaction(2, led2_on);
 
-
-        //second_byte[0].logic_name = "set_led0";
-        //second_byte[0].logic_value = 1;
-
-        //second_byte[1].logic_name = "set_led1";
-        //second_byte[1].logic_value = 2;
-
-        //second_byte[2].logic_name = "set_led2";
-        //second_byte[2].logic_value = 3;
+        register_reaction(1, led0_off);
+        register_reaction(2, led1_off);
+        register_reaction(2, led2_off);
 
 
-        //sixth_byte[0].logic_name = "no_sensor_action";
-        //sixth_byte[0].logic_value = 0;
-
-        //sixth_byte[1].logic_name = "temperature_sensor";
-        //sixth_byte[1].logic_value = 1;
-
-        //sixth_byte[2].logic_name = "humidity_sensor";
-        //sixth_byte[2].logic_value = 2;
-
-        //asddsa(decider);
 
 
-        //register_input(0, 0, "turn_off_light");
-        //register_input(1, "turn_on_light");
 
 
 
@@ -1222,6 +1207,7 @@ void main(void)
 				indicating = 1U;
 			}
 		}
+                resolve(value_written);
 
 
 	}
