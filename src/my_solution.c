@@ -57,7 +57,7 @@ void execute_function_named(void (*f)(void)) {
 void resolve(char *value_incoming) {
 
   printf("SOM V MOJOM RESOLVE\n");
-  for (int i = 0; i < sixth_counter; i++) {
+  for (int i = 0; i < strlen(value_incoming); i++) {
     printf("..!!.. value_incoming[%d] = ", i);
     printf("%" PRIx32 "\n", value_incoming[i]);
   }
@@ -72,10 +72,18 @@ void resolve(char *value_incoming) {
     }
   }
 
-  int number_of_configs = strlen(value_incoming)/CONFIG_LENGTH;
-  if(number_of_configs % CONFIG_LENGTH != 0){
-    number_of_configs += 1;
+
+  int number_of_configs;
+  if(strlen(value_incoming) < CONFIG_LENGTH){
+    number_of_configs = 1;
+  }else{
+    number_of_configs = strlen(value_incoming)/CONFIG_LENGTH;
+     if(number_of_configs % CONFIG_LENGTH != 0){
+       number_of_configs += 1;
+     }
   }
+  
+ 
 
   printf("Number of configs = %d / %d = %d\n", strlen(value_incoming), CONFIG_LENGTH, number_of_configs);
   

@@ -253,6 +253,8 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 	//uint8_t *value = attr->user_data;
         uint8_t *value = attr->user_data;
         uint8_t *stable_value = value;
+
+        //potrebujem ju nejako nanovo alokovat
         value_written = value;
         
        
@@ -1205,6 +1207,7 @@ void main(void)
 				indicating = 1U;
 			}
 		}
+                
                 resolve(value_written);
 
 
