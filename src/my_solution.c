@@ -54,10 +54,10 @@ void execute_function_named(void (*f)(void)) {
 // teraz
 // precitaj a konaj podla zapisanej konfiguracie
 // int namerana_hodnota, int namerana_hodnota_coho,
-void resolve(char *value_incoming) {
+void resolve(char *value_incoming, int value_incoming_length) {
 
   printf("SOM V MOJOM RESOLVE\n");
-  for (int i = 0; i < strlen(value_incoming); i++) {
+  for (int i = 0; i < value_incoming_length; i++) {
     printf("..!!.. value_incoming[%d] = ", i);
     printf("%" PRIx32 "\n", value_incoming[i]);
   }
@@ -74,10 +74,10 @@ void resolve(char *value_incoming) {
 
 
   int number_of_configs;
-  if(strlen(value_incoming) < CONFIG_LENGTH){
+  if(value_incoming_length < CONFIG_LENGTH){
     number_of_configs = 1;
   }else{
-    number_of_configs = strlen(value_incoming)/CONFIG_LENGTH;
+    number_of_configs = value_incoming_length/CONFIG_LENGTH;
      if(number_of_configs % CONFIG_LENGTH != 0){
        number_of_configs += 1;
      }

@@ -240,6 +240,7 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 
 typedef void (*some_random_function)();
 static char *value_written;
+static int value_written_length;
 
 
 static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
@@ -253,11 +254,14 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 	//uint8_t *value = attr->user_data;
         uint8_t *value = attr->user_data;
         uint8_t *stable_value = value;
-
-        //potrebujem ju nejako nanovo alokovat
-        value_written = value;
         
-       
+
+        LOG_INF("DLZKA: %d\n", len);
+        value_written = value;
+        value_written_length = len;
+
+
+
         //mc.do_something();
         //LOG_INF("\nDOLEZITE!!! %d\\n \n", foo());
         //manualne obmedzenie na dlzku
@@ -279,7 +283,7 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
         //  LOG_INF("%" PRIx32 "\n", value[i]);   
         
         //}
-        LOG_INF("DLZKA: %d\n", len);
+        
         len_of_value = len;
 	/* KEY_ID is used to store a key, lets see if we can read it from flash
 	 */
@@ -1104,7 +1108,7 @@ static struct bt_conn_auth_cb auth_cb_display = {
 
 void main(void)
 {         
-        
+        len_of_value = 0;
         //Vseobecne zadefinovanie miesta vstupu a co predstavuje
         register_input(1,"temperature");
         register_input(2,"humidity");
@@ -1208,7 +1212,7 @@ void main(void)
 			}
 		}
                 
-                resolve(value_written);
+                resolve(value_written, value_written_length);
 
 
 	}
