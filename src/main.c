@@ -298,13 +298,11 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 		//key[3] = value[3];
 
 		(void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
-		for (int n = 0; n < len; n++) {
-			printk("%d %x ", n, key[n]);
+		//for (int n = 0; n < len; n++) {
+		//	printk("%d. %x \n", n, key[n]);
 
-                        if(n==8 || n==17 || n==26){
-                          printk("\n");
-                        }
-		}
+                       
+		//}
 		printk("\n");
 	} else   {/* item was not found, add it */
 		//LOG_INF("No key found, adding it at id %d\n", KEY_ID);
@@ -320,9 +318,9 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 	}
         
 
-        for(int a=0; a<2; a++){
-          LOG_INF("!!! \n %d. TAK NACITALO MI TO CONFIG: %d %s\ !!!\n ", a, sixth_bytee[a].logic_value, sixth_bytee[a].logic_name);
-        }
+        //for(int a=0; a<2; a++){
+        //  LOG_INF("!!! \n %d. TAK NACITALO MI TO CONFIG: %d %s\ !!!\n ", a, sixth_bytee[a].logic_value, sixth_bytee[a].logic_name);
+        //}
 
         for(int a=0; a<6; a++){
           printf("!!! \n %d. REACTION: %d \ !!!\n ", a, first_byte[a].logic_value);
