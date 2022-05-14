@@ -57,7 +57,7 @@ void execute_function_named(void (*f)(void)) {
 // int namerana_hodnota, int namerana_hodnota_coho,
 void resolve(char *value_incoming, int value_incoming_length) {
 
-  if(config_has_been_written == false){
+  if (config_has_been_written == false) {
     printf("No config written yet!\n");
     return;
   }
@@ -72,12 +72,15 @@ void resolve(char *value_incoming, int value_incoming_length) {
     number_of_configs = 1;
   } else {
     number_of_configs = value_incoming_length / CONFIG_LENGTH;
-    if (number_of_configs % CONFIG_LENGTH != 0) {
+
+    if (value_incoming_length % CONFIG_LENGTH != 0) {
+      
+      printf("number_of_configs % CONFIG_LENGTH = %d / %d = %d\n", value_incoming_length, CONFIG_LENGTH, number_of_configs);
       number_of_configs += 1;
     }
   }
 
-  printf("Number of configs = %d / %d = %d\n", strlen(value_incoming), CONFIG_LENGTH, number_of_configs);
+  printf("Number of configs = %d / %d = %d\n", value_incoming_length, CONFIG_LENGTH, number_of_configs);
 
   // id of first bye
   int always_first_byte = 0;
@@ -89,18 +92,30 @@ void resolve(char *value_incoming, int value_incoming_length) {
         printf("ZHODA %d %d\n", value_incoming[always_first_byte + 0], first_byte[i].logic_value);
         void (*execute_this_function)() = first_byte[i].logic_name;
         // how many times function should be executed
-        for (int repetition = 0; repetition < value_incoming[1]; repetition++) {
-          execute_this_function();
-          printf("Opakujem vykonanie funkcie\n");
+        if (always_first_byte + 1 > value_incoming_length) {
+          break;
+        } else {
+          for (int repetition = 0; repetition < value_incoming[always_first_byte + 1]; repetition++) {
+            execute_this_function();
+            printf("Opakujem vykonanie funkcie\n");
+          }
         }
       }
     }
 
     // when we need time between executing configs
-    printf("value_incoming[%d]: sleep time: %d decisecond)\n", always_first_byte + 2, value_incoming[always_first_byte + 2] * 10000);
-    printf("value_incoming[%d]: sleep time: %d miliseconds\n", always_first_byte + 3, value_incoming[always_first_byte + 3] * 100);
-    k_msleep((value_incoming[always_first_byte + 2] * 10000));
-    k_msleep((value_incoming[always_first_byte + 3] * 100));
+    if (always_first_byte + 2 > value_incoming_length) {
+      break;
+    } else {
+      printf("value_incoming[%d]: sleep time: %d decisecond)\n", always_first_byte + 2, value_incoming[always_first_byte + 2] * 10000);
+      k_msleep((value_incoming[always_first_byte + 2] * 10000));
+    }
+    if (always_first_byte + 3 > value_incoming_length) {
+      break;
+    } else {
+      printf("value_incoming[%d]: sleep time: %d miliseconds\n", always_first_byte + 3, value_incoming[always_first_byte + 3] * 100);
+      k_msleep((value_incoming[always_first_byte + 3] * 100));
+    }
 
     always_first_byte += CONFIG_LENGTH;
   }
