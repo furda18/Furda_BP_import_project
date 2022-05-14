@@ -62,6 +62,15 @@ void resolve(char *value_incoming){
         printf("%" PRIx32 "\n", value_incoming[i]);
         
     }
+
+   for (int i = 0; i < 6; i++)
+    {
+        if(first_byte[i].logic_value == value_incoming[0]){
+          printf("ZHODA %d %d\n", value_incoming[0], first_byte[i].logic_value);
+          void (*toto_executni)() = first_byte[i].logic_name;
+          toto_executni();
+        }
+    }
   //precitaj co je napisane v pamati
 
   
@@ -160,11 +169,11 @@ void turn_on_led0(){
 }
 
 void turn_on_led1(){
-  led_handler(1, true);
+  printf("\n\nHAHAHAHAHAHA som v turn_on_led1/n/n/n/");
 }
 
 void turn_on_led2(){
-  led_handler(2, true);
+  printf("\n\nHAHAHAHAHAHA som v turn_on_led2/n/n/n/");
 }
 
 

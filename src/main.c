@@ -1119,11 +1119,11 @@ void main(void)
 
         register_reaction(1, led0_on);
         register_reaction(2, led1_on);
-        register_reaction(2, led2_on);
+        register_reaction(3, led2_on);
 
-        register_reaction(1, led0_off);
-        register_reaction(2, led1_off);
-        register_reaction(2, led2_off);
+        register_reaction(4, led0_off);
+        register_reaction(5, led1_off);
+        register_reaction(6, led2_off);
 
 
 
