@@ -327,7 +327,7 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
         for(int a=0; a<6; a++){
           printf("!!! \n %d. REACTION: %d \ !!!\n ", a, first_byte[a].logic_value);
           void (*fun_ptrr)() = first_byte[a].logic_name;
-          fun_ptrr();
+          //fun_ptrr();
           //function_ole();
         }
 

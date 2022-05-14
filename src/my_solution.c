@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include <fs/nvs.h>
 
+#include <devicetree.h>
+#include <drivers/gpio.h>
+#include <stdlib.h> //for using the function sleep
+#include <stdio.h>
+#include <time.h>
+
 
 
 //https://www.quora.com/How-do-I-get-the-function-name-from-a-variable-in-C-I-am-passing-a-function-A-into-function-B-How-can-I-print-out-functions-A-name-from-function-B
@@ -73,44 +79,6 @@ void resolve(char *value_incoming){
     }
   //precitaj co je napisane v pamati
 
-  
-  /////*Thingy kod*/
-  //const struct device *dev_t;
-  //bool led_is_on_t = true;
-  //int ret_t;
-
-  //bool led_verification_t = false;
-
-  //if(vystup == "set_led0"){
-  //  printk("config 1, led 0\n");
-  //  dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led0), gpios));
-  //  ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led0), gpios));
-  //  gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
-  //}
-  //     //           if(vystup == "set_led1"){
-  //     //             printk("config 2, led 1\n");
-  //     //             dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led1), gpios));
-  //     //             ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led1), gpios));       
-  //     //             gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
-  //     //           }
-  //     //           if(vystup == "set_led2"){               
-  //     //             printk("config 3, led 2\n");
-  //     //             dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led2), gpios));
-  //     //             ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led2), gpios));
-  //     //             gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
-  //     //           }
-
-  //     //if(vystup0 == "turn_off"){
-  //     //             led_is_on_t = false;
-  //     //             LOG_INF("turning led off\n");                                     
-  //     //           }
-
-  //    //zapni
-  //    if(vystup0 == "turn_on"){
-  //      led_is_on_t = true;
-  //      LOG_INF("turning led on\n");                                             
-  //    }
-
 
   //0 zapni
   //1 led0
@@ -126,18 +94,7 @@ void resolve(char *value_incoming){
   
  // tu sa budu diat vsetky tie pravidla ostatne
   //tu potrebujem komplet konfiguraciu
-  //           //zlomovy bod - osetri
-       //           int break_point = value[6];
-       //           LOG_INF("Breaking point: %d\n", break_point); 
-       //           //kladny=1 zaporny=2
-       //           int positivity = value[7];
-       //           LOG_INF("Plus(1)/Minus(2): %d\n", positivity); 
-       //           if(positivity == 2){
-       //             sensor_value = sensor_value*(-1);
-       //           }
-              
-       //           int reaction_is = value[8];
-       //           LOG_INF("Sensor value: %d vs\n",sensor_value);
+        
   
 }
 
@@ -159,21 +116,53 @@ int humidity_value(){
 }
 
 void led_handler(int led_index, bool activation){
- 
+
+    //const struct device *dev_t;
+    //bool led_is_on_t = activation;
+    //int ret_t;
+      
+    
+    //dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led0), gpios));
+    //ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led0), gpios));
+    //gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
 }
 
 
 void turn_on_led0(){
   //led_handler(0, true);
   printf("\n\nHAHAHAHAHAHA som v turn_on_led0/n/n/n/");
+  const struct device *dev_t;
+  bool led_is_on_t = true;
+  int ret_t;
+    
+  dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led0), gpios));
+  ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led0), gpios));
+  gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led0), gpios), (int)led_is_on_t);
+
 }
 
 void turn_on_led1(){
   printf("\n\nHAHAHAHAHAHA som v turn_on_led1/n/n/n/");
+  const struct device *dev_t;
+  bool led_is_on_t = true;
+  int ret_t;
+    
+  dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led1), gpios));
+  ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led1), gpios));       
+  gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led1), gpios), (int)led_is_on_t);
+
 }
 
 void turn_on_led2(){
   printf("\n\nHAHAHAHAHAHA som v turn_on_led2/n/n/n/");
+  const struct device *dev_t;
+  bool led_is_on_t = true;
+  int ret_t;
+
+  dev_t = device_get_binding(DT_GPIO_LABEL(DT_ALIAS(led2), gpios));
+  ret_t = gpio_pin_configure(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), GPIO_OUTPUT_ACTIVE | DT_GPIO_FLAGS(DT_ALIAS(led2), gpios));
+  gpio_pin_set(dev_t, DT_GPIO_PIN(DT_ALIAS(led2), gpios), (int)led_is_on_t);
+ 
 }
 
 
