@@ -46,20 +46,20 @@
 
 
 
-static struct nvs_fs fs;
+//static struct nvs_fs fs;
 
-#define STORAGE_NODE_LABEL storage
+//#define STORAGE_NODE_LABEL storage
 
 
-#define KEY_ID 2
+//#define KEY_ID 2
 
 
 /*definovanie pamate, este navyse su tie reboot countery*/
-int rc = 0, cnt = 0, cnt_his = 0;
-uint8_t *key;
-uint32_t reboot_counter = 0U, reboot_counter_his;
-struct flash_pages_info info;
-const struct device *flash_dev;
+//int rc = 0, cnt = 0, cnt_his = 0;
+//uint8_t *key;
+//uint32_t reboot_counter = 0U, reboot_counter_his;
+//struct flash_pages_info info;
+//const struct device *flash_dev;
 
 /*LED Preamble*/
 
@@ -180,6 +180,14 @@ static int signed_value1;
 static long signed_value2;
 static int len_of_value;
 
+typedef void (*some_random_function)();
+static char *value_written;
+
+int value_written_length = 0;
+
+char my_value_ok[100];
+
+
 
 
 static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
@@ -190,7 +198,7 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
        
 
        
-        LOG_INF("len_of_value vs len: %d %d\n",len_of_value, len );
+        //printk("len_of_value vs len: %d %d\n",len_of_value, len );
         /*ak by som dal, ze vsetky value su 0, tak by mi to zapisalo za value key*/
         int counter = 0;
 
@@ -201,15 +209,19 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
             counter++;
           }
         }
+
+        
     
         rc = nvs_read(&fs, KEY_ID, &key, sizeof(key));
         if (rc > 0) { /* item was found, show it */
-		LOG_INF("Id: %d, THE Key is: ", KEY_ID);
+		printk("Id: %d, THE Key is: ", KEY_ID);
 		for (int n = 0; n < key; n++) {
 			printk("%x ", key[n]);
 		}
 		printk("\n");
         }
+
+       
 
         if(counter == 3){
            printk("00-00-00 configuration, rewriting for key! \n");
@@ -222,11 +234,6 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 				 len_of_value);
        
 }
-
-
-typedef void (*some_random_function)();
-static char *value_written;
-static unsigned int value_written_length = 0;
 
 
 static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
@@ -248,8 +255,7 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
         LOG_INF("DLZKA: %d\n", len);
         value_written = value;
         value_written_length = len;
-        LOG_INF("DLZKA nasa: %d\n", value_written_length);
-
+       
         
 
 
@@ -282,26 +288,37 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
         if (rc > 0) { /* item was found, show it */
 		
                 for (int n = 0; n < len; n++) {
-			//printk("%x ", key[n]);
+			printk("%x ", key[n]);
                         key[n] = value[n];
+                        my_value_ok[n] = value[n];
 		}
                 (void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
-		//for (int n = 0; n < len; n++) {
-		//	printk("%d. %x \n", n, key[n]);
+                printf("-.-.->\n");
+		for (int n = 0; n < len; n++) {
+			printk("%d. %x \n", n, key[n]);
 
                        
-		//}
+		}
 		printk("\n");
 	} else   {/* item was not found, add it */
 		for (int n = 0; n < len; n++) {
-			
+			my_value_ok[n] = value[n];
                         key[n] = value[n];
 		}
 		(void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
+                printf("--->\n");
+                for (int n = 0; n < len; n++) {
+			printk("%d. %x \n", n, key[n]);
+
+                       
+		}
 	}
 
+        
+        value_written_length = len;
+        
      
-
+       
         //for(int a=0; a<2; a++){
         //  LOG_INF("!!! \n %d. TAK NACITALO MI TO CONFIG: %d %s\ !!!\n ", a, sixth_bytee[a].logic_value, sixth_bytee[a].logic_name);
         //}
@@ -1188,7 +1205,10 @@ void main(void)
 			}
 		}
                 
-                resolve(value_written, value_written_length);
+                for(int i=0; i<value_written_length; i++){
+                  printf("MAIN: %d\n", my_value_ok[i]);
+                }
+                resolve(my_value_ok, value_written_length);
 
 
 	}

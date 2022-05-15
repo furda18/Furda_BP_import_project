@@ -25,6 +25,37 @@ LOG_MODULE_REGISTER(app, CONFIG_LOG_DEFAULT_LEVEL);
 
 #define CONFIG_LENGTH 7
 
+
+
+/*Flashing Preamle*/
+#include <zephyr.h>
+#include <sys/reboot.h>
+#include <device.h>
+#include <string.h>
+#include <drivers/flash.h>
+#include <storage/flash_map.h>
+#include <fs/nvs.h>
+
+
+
+
+
+
+static struct nvs_fs fs;
+
+#define STORAGE_NODE_LABEL storage
+
+
+#define KEY_ID 2
+
+
+/*definovanie pamate, este navyse su tie reboot countery*/
+int rc = 0;
+uint8_t *key;
+struct flash_pages_info info;
+const struct device *flash_dev;
+
+
 // https://www.quora.com/How-do-I-get-the-function-name-from-a-variable-in-C-I-am-passing-a-function-A-into-function-B-How-can-I-print-out-functions-A-name-from-function-B
 
 // momentalne iba 5 roznych instrukcii, mozno to je aj max dlzka bufferu idk
@@ -72,16 +103,23 @@ void execute_function_named(void (*f)(void)) {
 // precitaj a konaj podla zapisanej konfiguracie
 // int namerana_hodnota, int namerana_hodnota_coho,
 void resolve(char *value_incoming, int value_incoming_length) {
-
+  
+  //printf("RESOLVE: %s\n", value_incoming);
+  
   if (config_has_been_written == false) {
     printf("No config written yet!\n");
     return;
   }
+
+
   printf("SOM V MOJOM RESOLVE\n");
   for (int i = 0; i < value_incoming_length; i++) {
     printf("..!!.. value_incoming[%d] = ", i);
     printf("%" PRIx32 "\n", value_incoming[i]);
+    printf("or: %d\n", value_incoming[i]);
   }
+
+
 
   //int number_of_configs = 0;
   //if (value_incoming_length < CONFIG_LENGTH) {
@@ -98,58 +136,58 @@ void resolve(char *value_incoming, int value_incoming_length) {
 
   //printf("Number of configs = %d / %d = %d\n", value_incoming_length, CONFIG_LENGTH, number_of_configs);
 
-  // id of first bye
-  int always_first_byte = 0;
+  //// id of first bye
+  //int always_first_byte = 0;
 
-  // reading config after config
-  //for (int iteration = 0; iteration < number_of_configs; iteration++) {
+  //// reading config after config
+  ////for (int iteration = 0; iteration < number_of_configs; iteration++) {
 
-  //  for (int i = 0; i < first_counter; i++) {
-  //    if (first_byte[i].logic_value == value_incoming[always_first_byte + 0]) {
-  //      printf("ZHODA v 0tom: %d %d\n", value_incoming[always_first_byte + 0], first_byte[i].logic_value);
-  //      void (*execute_this_function)() = first_byte[i].logic_name;
-  //      execute_this_function();
-  //    }
-  //  }
+  ////  for (int i = 0; i < first_counter; i++) {
+  ////    if (first_byte[i].logic_value == value_incoming[always_first_byte + 0]) {
+  ////      printf("ZHODA v 0tom: %d %d\n", value_incoming[always_first_byte + 0], first_byte[i].logic_value);
+  ////      void (*execute_this_function)() = first_byte[i].logic_name;
+  ////      execute_this_function();
+  ////    }
+  ////  }
   
-    //// when we need time between executing configs
-    //if (always_first_byte + 1 > value_incoming_length) {
-    //  continue;
-    //} else {
-    //  printf("value_incoming[%d]: sleep time: %d decisecond)\n", always_first_byte + 1, value_incoming[always_first_byte + 1] * 10000);
-    //  k_msleep((value_incoming[always_first_byte + 1] * 10000));
-    //}
-    //if (always_first_byte + 2 > value_incoming_length) {
-    //  continue;
-    //} else {
-    //  printf("value_incoming[%d]: sleep time: %d miliseconds\n", always_first_byte + 2, value_incoming[always_first_byte + 2] * 100);
-    //  k_msleep((value_incoming[always_first_byte + 2] * 100));
-    //}
+  //  //// when we need time between executing configs
+  //  //if (always_first_byte + 1 > value_incoming_length) {
+  //  //  continue;
+  //  //} else {
+  //  //  printf("value_incoming[%d]: sleep time: %d decisecond)\n", always_first_byte + 1, value_incoming[always_first_byte + 1] * 10000);
+  //  //  k_msleep((value_incoming[always_first_byte + 1] * 10000));
+  //  //}
+  //  //if (always_first_byte + 2 > value_incoming_length) {
+  //  //  continue;
+  //  //} else {
+  //  //  printf("value_incoming[%d]: sleep time: %d miliseconds\n", always_first_byte + 2, value_incoming[always_first_byte + 2] * 100);
+  //  //  k_msleep((value_incoming[always_first_byte + 2] * 100));
+  //  //}
 
-    // for (int i = 0; i < fourth_counter; i++) {
-    //  if (always_first_byte + 3 > value_incoming_length) {
-    //    continue;
-    //  } else {
-    //    if (fourth_byte[i].logic_value == value_incoming[always_first_byte + 3]) {
-    //      printf("ZHODA v 3tom: %d %d\n", value_incoming[always_first_byte + 3], fourth_byte[i].logic_value);
+  //  // for (int i = 0; i < fourth_counter; i++) {
+  //  //  if (always_first_byte + 3 > value_incoming_length) {
+  //  //    continue;
+  //  //  } else {
+  //  //    if (fourth_byte[i].logic_value == value_incoming[always_first_byte + 3]) {
+  //  //      printf("ZHODA v 3tom: %d %d\n", value_incoming[always_first_byte + 3], fourth_byte[i].logic_value);
 
-    //      void (*execute_this_function2)() = fourth_byte[i].logic_name;
-    //      execute_this_function2();
-    //    }
-    //  }
-    //}
+  //  //      void (*execute_this_function2)() = fourth_byte[i].logic_name;
+  //  //      execute_this_function2();
+  //  //    }
+  //  //  }
+  //  //}
 
-    always_first_byte += CONFIG_LENGTH;
-  //}
+  //  always_first_byte += CONFIG_LENGTH;
+  ////}
 
-  // 5 dajme tomu ze senzor nameral vsetky hodnoty, preto tu vieme, ze
-  // ci riesime teplotu alebo humiditu
+  //// 5 dajme tomu ze senzor nameral vsetky hodnoty, preto tu vieme, ze
+  //// ci riesime teplotu alebo humiditu
 
-  // 6 zlomovy bod
-  // 7 +/-
-  // 8 <>=
+  //// 6 zlomovy bod
+  //// 7 +/-
+  //// 8 <>=
 
-  // tu sa budu diat vsetky tie pravidla ostatne
+  //// tu sa budu diat vsetky tie pravidla ostatne
   // tu potrebujem komplet konfiguraciu
 }
 
