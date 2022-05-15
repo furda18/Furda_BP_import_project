@@ -126,18 +126,88 @@ void resolve(char *value_incoming, int value_incoming_length) {
   // id of first bye
   int always_first_byte = 0;
 
-  // reading config after config
+  // action+reaction
   for (int iteration = 0; iteration < number_of_configs; iteration++) {
+    
+    void (*execute_action)();
+    int (*execute_input)();
+
 
     for (int i = 0; i < first_counter; i++) {
       if (first_byte[i].logic_value == value_incoming[always_first_byte + 0]) {
         printf("ZHODA v 0tom: %d %d\n", value_incoming[always_first_byte + 0], first_byte[i].logic_value);
-        void (*execute_this_function)() = first_byte[i].logic_name;
-        execute_this_function();
+        execute_action = first_byte[i].logic_name;
+     }
+    }
+
+    //input
+    for (int i = 0; i < fourth_counter; i++) {
+      if (always_first_byte + 3 > value_incoming_length) {
+        continue;
+      } else {
+        if (fourth_byte[i].logic_value == value_incoming[always_first_byte + 3]) {
+          printf("ZHODA v 3tom: %d %d\n", value_incoming[always_first_byte + 3], fourth_byte[i].logic_value);
+
+          execute_input = fourth_byte[i].logic_name;
+          
+        }
       }
     }
 
-    // when we need time between executing configs
+    
+    int breaking_point = 0;
+
+    if (always_first_byte + 4 > value_incoming_length) {
+      continue;
+    } else {
+      breaking_point = value_incoming[always_first_byte + 4];
+    }
+    
+    
+     if (always_first_byte + 5 > value_incoming_length) {
+      continue;
+    } else {
+      if(value_incoming[always_first_byte + 5] == 2){
+        breaking_point *= (-1);
+        printf("Breaking point is negated *(-1)\n");
+      }
+    }
+
+    printf("BREAKING POINT: %d\n", breaking_point);
+
+    // more/less/same
+    if (always_first_byte + 6 > value_incoming_length) {
+      continue;
+    } else {
+      //same
+      if(value_incoming[always_first_byte + 6] == 0){
+        if( execute_input() ==  breaking_point){
+        execute_action();
+        }
+        
+      }
+
+      //more
+      if(value_incoming[always_first_byte + 6] == 1){
+        if( execute_input() >  breaking_point){
+        execute_action();
+        }
+        
+      }
+
+      //less
+      if(value_incoming[always_first_byte + 6] == 2){
+        if( execute_input() <  breaking_point){
+        execute_action();
+        }
+      }
+
+
+
+    }
+
+
+     // when we need time between executing configs,
     if (always_first_byte + 1 > value_incoming_length) {
       continue;
     } else {
@@ -151,20 +221,14 @@ void resolve(char *value_incoming, int value_incoming_length) {
       k_msleep((value_incoming[always_first_byte + 2] * 100));
     }
 
-    for (int i = 0; i < fourth_counter; i++) {
-      if (always_first_byte + 3 > value_incoming_length) {
-        continue;
-      } else {
-        if (fourth_byte[i].logic_value == value_incoming[always_first_byte + 3]) {
-          printf("ZHODA v 3tom: %d %d\n", value_incoming[always_first_byte + 3], fourth_byte[i].logic_value);
+    
 
-          void (*execute_this_function2)() = fourth_byte[i].logic_name;
-          execute_this_function2();
-        }
-      }
-    }
+
+   
 
     always_first_byte += CONFIG_LENGTH;
+
+  //end of iteration
   }
 
   //// 5 dajme tomu ze senzor nameral vsetky hodnoty, preto tu vieme, ze
