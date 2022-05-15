@@ -157,10 +157,6 @@ CMakeFiles/app.dir/src/main.c.obj: ../src/main.c \
  C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/stdlib.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/time.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/lib/libc/minimal/include/sys/_timespec.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/reboot.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/drivers/flash.h \
- zephyr/include/generated/syscalls/flash.h \
- C:/Users/difo/ncs/v1.9.1/zephyr/include/storage/flash_map.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/drivers/sensor.h \
  zephyr/include/generated/syscalls/sensor.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/logging/log.h \
@@ -173,4 +169,8 @@ CMakeFiles/app.dir/src/main.c.obj: ../src/main.c \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/cbprintf_internal.h \
  C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/cbprintf_cxx.h \
  zephyr/include/generated/syscalls/log_msg2.h \
- zephyr/include/generated/syscalls/log_core.h
+ zephyr/include/generated/syscalls/log_core.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/sys/reboot.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/drivers/flash.h \
+ zephyr/include/generated/syscalls/flash.h \
+ C:/Users/difo/ncs/v1.9.1/zephyr/include/storage/flash_map.h

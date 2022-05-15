@@ -87,43 +87,43 @@ const struct device *flash_dev;
 //#include <drivers/gpio.h>
 #include <logging/log.h>
 
-LOG_MODULE_REGISTER(app, CONFIG_LOG_DEFAULT_LEVEL);
+//LOG_MODULE_REGISTER(app, CONFIG_LOG_DEFAULT_LEVEL);
 
-static void process_sample(const struct device *dev)
-{
-	static unsigned int obs;
-	struct sensor_value temp, hum;
-	if (sensor_sample_fetch(dev) < 0) {
-		LOG_INF("Sensor sample update error\n");
-		return;
-	}
+//static void process_sample(const struct device *dev)
+//{
+//	static unsigned int obs;
+//	struct sensor_value temp, hum;
+//	if (sensor_sample_fetch(dev) < 0) {
+//		LOG_INF("Sensor sample update error\n");
+//		return;
+//	}
 
-	if (sensor_channel_get(dev, SENSOR_CHAN_AMBIENT_TEMP, &temp) < 0) {
-		LOG_INF("Cannot read HTS221 temperature channel\n");
-		return;
-	}
+//	if (sensor_channel_get(dev, SENSOR_CHAN_AMBIENT_TEMP, &temp) < 0) {
+//		LOG_INF("Cannot read HTS221 temperature channel\n");
+//		return;
+//	}
 
-	if (sensor_channel_get(dev, SENSOR_CHAN_HUMIDITY, &hum) < 0) {
-		LOG_INF("Cannot read HTS221 humidity channel\n");
-		return;
-	}
+//	if (sensor_channel_get(dev, SENSOR_CHAN_HUMIDITY, &hum) < 0) {
+//		LOG_INF("Cannot read HTS221 humidity channel\n");
+//		return;
+//	}
 
-	++obs;
-	LOG_INF("Observation:%u\n", obs);
+//	++obs;
+//	LOG_INF("Observation:%u\n", obs);
 
-	/* display temperature */
-	LOG_INF("Temperature:%d C\n", temp.val1);
+//	/* display temperature */
+//	LOG_INF("Temperature:%d C\n", temp.val1);
 
-	/* display humidity */
-	LOG_INF("Relative Humidity:%d %%\n",
-	       hum.val1);
-}
+//	/* display humidity */
+//	LOG_INF("Relative Humidity:%d %%\n",
+//	       hum.val1);
+//}
 
-static void hts221_handler(const struct device *dev,
-			   const struct sensor_trigger *trig)
-{
-	process_sample(dev);
-}
+//static void hts221_handler(const struct device *dev,
+//			   const struct sensor_trigger *trig)
+//{
+//	process_sample(dev);
+//}
 
 
 
@@ -177,7 +177,7 @@ static struct bt_gatt_cep vnd_long_cep = {
 
 static int signed_value;
 static int signed_value1;
-static int signed_value2;
+static long signed_value2;
 static int len_of_value;
 
 
@@ -223,24 +223,10 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
        
 }
 
-// important part, user can define functions on his bytes
-//struct Logic_deciderss{
-//          int logic_value;
-//          char* logic_name;        
-//}first_byte[3], second_byte[3], sixth_byte[3];
-//define dame nech je kto krajsie
-
-
-//decider[20]
-
-//void asddsa(struct Logic_deciderss *dd){
-
-//    LOG_INF("FFFFFFFFFFF...%d %d\n", dd[0].a, dd[0].b);
-//}
 
 typedef void (*some_random_function)();
 static char *value_written;
-static int value_written_length;
+static unsigned int value_written_length = 0;
 
 
 static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
@@ -248,6 +234,9 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 			    uint16_t flags)
 {         
         
+         //for (int i = 0; i < len; i++){           
+         //     key[i] = 0;
+         //}
         //LOG_INF("Len co dosla dako do funkcie: %d\n", len);
         //LOG_INF("Offset? : %d\n", offset);
         //len = 9;
@@ -259,6 +248,8 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
         LOG_INF("DLZKA: %d\n", len);
         value_written = value;
         value_written_length = len;
+        LOG_INF("DLZKA nasa: %d\n", value_written_length);
+
         
 
 
@@ -289,21 +280,12 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 	 */
 	rc = nvs_read(&fs, KEY_ID, &key, sizeof(key));
         if (rc > 0) { /* item was found, show it */
-		//LOG_INF("Id: %d, OLD Key: ", KEY_ID);
-		for (int n = 0; n < len; n++) {
+		
+                for (int n = 0; n < len; n++) {
 			//printk("%x ", key[n]);
                         key[n] = value[n];
 		}
-		//LOG_INF("\n");
-
-                /*new key*/
-                //LOG_INF("NEW Key: ");
-		//key[0] = value[0];
-		//key[1] = value[1];
-		//key[2] = value[2];
-		//key[3] = value[3];
-
-		(void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
+                (void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
 		//for (int n = 0; n < len; n++) {
 		//	printk("%d. %x \n", n, key[n]);
 
@@ -311,29 +293,25 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 		//}
 		printk("\n");
 	} else   {/* item was not found, add it */
-		//LOG_INF("No key found, adding it at id %d\n", KEY_ID);
-                for (int n = 0; n < len; n++) {
+		for (int n = 0; n < len; n++) {
 			
                         key[n] = value[n];
 		}
-		//key[0] = value[0];
-		//key[1] = value[1];
-		//key[2] = value[2];
-		//key[3] = value[3];
 		(void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
 	}
-        
+
+     
 
         //for(int a=0; a<2; a++){
         //  LOG_INF("!!! \n %d. TAK NACITALO MI TO CONFIG: %d %s\ !!!\n ", a, sixth_bytee[a].logic_value, sixth_bytee[a].logic_name);
         //}
 
-        for(int a=0; a<6; a++){
-          printf("!!! \n %d. REACTION: %d \ !!!\n ", a, first_byte[a].logic_value);
-          void (*fun_ptrr)() = first_byte[a].logic_name;
-          //fun_ptrr();
-          //function_ole();
-        }
+        //for(int a=0; a<6; a++){
+        //  printf("!!! \n %d. REACTION: %d \ !!!\n ", a, first_byte[a].logic_value);
+        //  //void (*fun_ptrr)() = first_byte[a].logic_name;
+        //  //fun_ptrr();
+        //  //function_ole();
+        //}
 
 
         //must be true to execute resolve
@@ -1113,8 +1091,12 @@ void main(void)
 {         
         len_of_value = 0;
         //Vseobecne zadefinovanie miesta vstupu a co predstavuje
-        register_input(1,"temperature");
-        register_input(2,"humidity");
+        int (*measure_temerature)() = &get_temperature_value;
+        int (*measure_humidity)() = &get_humidity_value;
+
+        register_input(1, measure_temerature);
+        register_input(2, measure_humidity);
+
 
         void (*led0_on)() = &turn_on_led0;
         void (*led1_on)() = &turn_on_led1;
@@ -1189,16 +1171,7 @@ void main(void)
 	while (1) {
 		k_sleep(K_SECONDS(1));
 
-		/* Current Time Service updates only when time is changed */
-		//cts_notify();
-
-		///* Heartrate measurements simulation */
-		//hrs_notify();
-
-		///* Battery level simulation */
-		//bas_notify();
-
-		/* Vendor indication simulation */
+		
 		if (simulate_vnd && vnd_ind_attr) {
 			if (indicating) {
 				continue;

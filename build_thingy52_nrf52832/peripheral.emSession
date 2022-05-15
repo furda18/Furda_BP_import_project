@@ -41,8 +41,12 @@
   <Watches active="0" update="Never"/>
  </Watch4>
  <Files>
-  <SessionOpenFile windowGroup="DockEditLeft" x="30" y="591" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/main.c" selected="0" top="575" codecName="Default"/>
-  <SessionOpenFile windowGroup="DockEditLeft" x="11" y="59" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/my_solution.c" selected="1" top="51" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="59" y="1221" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/main.c" selected="0" top="1197" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="5" y="139" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/my_solution.c" selected="0" top="103" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="17" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../src/cts.c" selected="0" top="0" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="38" y="45" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../include/logging/log_instance.h" selected="0" top="32" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="12" y="255" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="../../../../include/logging/log_core.h" selected="0" top="223" codecName="Default"/>
+  <SessionOpenFile windowGroup="DockEditLeft" x="0" y="0" useTextEdit="1" openedFrom="" useBinaryEdit="0" left="0" path="build.emProject" selected="1" top="0" codecName="Default"/>
  </Files>
  <ARMCrossStudioWindow activeProject="zephyr/zephyr.elf(build)" fileDialogDefaultFilter="*.c" autoConnectTarget="J-Link" buildConfiguration="Common" sessionSettings="" debugSearchFileMap="" fileDialogInitialDirectory="" debugSearchPath="" autoConnectCapabilities="3711"/>
 </session>
