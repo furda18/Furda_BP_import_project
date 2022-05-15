@@ -83,20 +83,20 @@ void resolve(char *value_incoming, int value_incoming_length) {
     printf("%" PRIx32 "\n", value_incoming[i]);
   }
 
-  int number_of_configs = 0;
-  if (value_incoming_length < CONFIG_LENGTH) {
-    number_of_configs = 1;
-  } else {
-    number_of_configs = value_incoming_length / CONFIG_LENGTH;
+  //int number_of_configs = 0;
+  //if (value_incoming_length < CONFIG_LENGTH) {
+  //  number_of_configs = 1;
+  //} else {
+  //  number_of_configs = value_incoming_length / CONFIG_LENGTH;
 
-    if (value_incoming_length % CONFIG_LENGTH != 0) {
+  //  if (value_incoming_length % CONFIG_LENGTH != 0) {
 
-      //printf("number_of_configs % CONFIG_LENGTH = %d / %d = %d\n", value_incoming_length, CONFIG_LENGTH, number_of_configs);
-      number_of_configs += 1;
-    }
-  }
+  //    //printf("number_of_configs % CONFIG_LENGTH = %d / %d = %d\n", value_incoming_length, CONFIG_LENGTH, number_of_configs);
+  //    number_of_configs += 1;
+  //  }
+  //}
 
-  printf("Number of configs = %d / %d = %d\n", value_incoming_length, CONFIG_LENGTH, number_of_configs);
+  //printf("Number of configs = %d / %d = %d\n", value_incoming_length, CONFIG_LENGTH, number_of_configs);
 
   // id of first bye
   int always_first_byte = 0;
