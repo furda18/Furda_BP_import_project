@@ -10,15 +10,10 @@
 #include <time.h>
 
 /*Temperature and Humidity*/
-
 #include <drivers/sensor.h>
 #include <stdio.h>
 #include <sys/util.h>
-
-// maybe for humidity
 #include <inttypes.h>
-
-//#include <drivers/gpio.h>
 #include <logging/log.h>
 
 LOG_MODULE_REGISTER(app, CONFIG_LOG_DEFAULT_LEVEL);
@@ -40,16 +35,12 @@ static struct nvs_fs fs;
 
 #define KEY_ID 2
 
-/*definovanie pamate, este navyse su tie reboot countery*/
 int rc = 0;
 uint8_t *key;
 struct flash_pages_info info;
 const struct device *flash_dev;
 
-// https://www.quora.com/How-do-I-get-the-function-name-from-a-variable-in-C-I-am-passing-a-function-A-into-function-B-How-can-I-print-out-functions-A-name-from-function-B
-
-// momentalne iba 5 roznych instrukcii, mozno to je aj max dlzka bufferu idk
-
+// meno funkcie co sa nasledne vykona sa moze spracovavat v strukture aj ako void, aj ako char:
 struct Logic_deciders {
   int logic_value;
   void *logic_name;
@@ -86,15 +77,9 @@ void execute_function_named(void (*f)(void)) {
   f();
 }
 
-// toto bude stale volane v maine
-// sem mi pride zakodovany (0x01, namerana_teplota );
-//  vlastne to 0x01 mi povie ze ide o tepotu a nie humiditu
-// teraz
-// precitaj a konaj podla zapisanej konfiguracie
-// int namerana_hodnota, int namerana_hodnota_coho,
+// funkcia volana v maine
 void resolve(char *value_incoming, int value_incoming_length) {
 
-  // printf("RESOLVE: %s\n", value_incoming);
 
   if (config_has_been_written == false) {
     printf("No config written yet!\n");
@@ -132,7 +117,6 @@ void resolve(char *value_incoming, int value_incoming_length) {
     void (*execute_action)();
     int (*execute_input)();
 
-
     for (int i = 0; i < first_counter; i++) {
       if (first_byte[i].logic_value == value_incoming[always_first_byte + 0]) {
         printf("ZHODA v 0tom: %d %d\n", value_incoming[always_first_byte + 0], first_byte[i].logic_value);
@@ -147,14 +131,11 @@ void resolve(char *value_incoming, int value_incoming_length) {
       } else {
         if (fourth_byte[i].logic_value == value_incoming[always_first_byte + 3]) {
           printf("ZHODA v 3tom: %d %d\n", value_incoming[always_first_byte + 3], fourth_byte[i].logic_value);
-
-          execute_input = fourth_byte[i].logic_name;
-          
+          execute_input = fourth_byte[i].logic_name;        
         }
       }
     }
 
-    
     int breaking_point = 0;
 
     if (always_first_byte + 4 > value_incoming_length) {
@@ -162,7 +143,6 @@ void resolve(char *value_incoming, int value_incoming_length) {
     } else {
       breaking_point = value_incoming[always_first_byte + 4];
     }
-    
     
      if (always_first_byte + 5 > value_incoming_length) {
       continue;
@@ -183,16 +163,14 @@ void resolve(char *value_incoming, int value_incoming_length) {
       if(value_incoming[always_first_byte + 6] == 0){
         if( execute_input() ==  breaking_point){
         execute_action();
-        }
-        
+        }      
       }
 
       //more
-      if(value_incoming[always_first_byte + 6] == 1){
-        if( execute_input() >  breaking_point){
-        execute_action();
+      if (value_incoming[always_first_byte + 6] == 1) {
+        if (execute_input() > breaking_point) {
+          execute_action();
         }
-        
       }
 
       //less
@@ -201,11 +179,7 @@ void resolve(char *value_incoming, int value_incoming_length) {
         execute_action();
         }
       }
-
-
-
     }
-
 
      // when we need time between executing configs,
     if (always_first_byte + 1 > value_incoming_length) {
@@ -221,25 +195,12 @@ void resolve(char *value_incoming, int value_incoming_length) {
       k_msleep((value_incoming[always_first_byte + 2] * 100));
     }
 
-    
-
-
-   
 
     always_first_byte += CONFIG_LENGTH;
 
   //end of iteration
   }
 
-  //// 5 dajme tomu ze senzor nameral vsetky hodnoty, preto tu vieme, ze
-  //// ci riesime teplotu alebo humiditu
-
-  //// 6 zlomovy bod
-  //// 7 +/-
-  //// 8 <>=
-
-  //// tu sa budu diat vsetky tie pravidla ostatne
-  // tu potrebujem komplet konfiguraciu
 }
 
 static void process_sample(const struct device *dev) {
