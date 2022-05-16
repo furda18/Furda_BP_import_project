@@ -93,17 +93,18 @@ void resolve(char *value_incoming, int value_incoming_length) {
     printf("or: %d\n", value_incoming[i]);
   }
 
+  //spracovavame iba cele konfiguracie
   int number_of_configs = 0;
-  if (value_incoming_length < CONFIG_LENGTH) {
-    number_of_configs = 1;
+  if ((value_incoming_length) < CONFIG_LENGTH) {
+    return;
   } else {
-    number_of_configs = value_incoming_length / CONFIG_LENGTH;
+    number_of_configs = (value_incoming_length) / CONFIG_LENGTH;
 
-    if (value_incoming_length % CONFIG_LENGTH != 0) {
+    //if ((value_incoming_length-1) % CONFIG_LENGTH != 0) {
 
-      // printf("number_of_configs % CONFIG_LENGTH = %d / %d = %d\n", value_incoming_length, CONFIG_LENGTH, number_of_configs);
-      number_of_configs += 1;
-    }
+    //  // printf("number_of_configs % CONFIG_LENGTH = %d / %d = %d\n", value_incoming_length, CONFIG_LENGTH, number_of_configs);
+    //  number_of_configs -= 1;
+    //}
   }
 
   printf("Number of configs = %d / %d = %d\n", value_incoming_length, CONFIG_LENGTH, number_of_configs);

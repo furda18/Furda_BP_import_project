@@ -61,6 +61,30 @@ static struct bt_uuid_128 vnd_auth_uuid = BT_UUID_INIT_128(
 
 #define VND_MAX_LEN 20
 
+static ssize_t read_vnd(struct bt_conn *conn, const struct bt_gatt_attr *attr,
+			void *buf, uint16_t len, uint16_t offset)
+{
+	const char *value = attr->user_data;
+
+	return bt_gatt_attr_read(conn, attr, buf, len, offset, value,
+				 strlen(value));
+}
+
+static ssize_t write_vnd(struct bt_conn *conn, const struct bt_gatt_attr *attr,
+			 const void *buf, uint16_t len, uint16_t offset,
+			 uint8_t flags)
+{
+	uint8_t *value = attr->user_data;
+
+	if (offset + len > VND_MAX_LEN) {
+		return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
+	}
+
+	memcpy(value + offset, buf, len);
+	value[offset + len] = 0;
+
+	return len;
+}
 
 static uint8_t simulate_vnd;
 static uint8_t indicating;
@@ -208,6 +232,7 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 
 static const struct bt_uuid_128 char2_signed_uuid = BT_UUID_INIT_128(
 	BT_UUID_128_ENCODE(0x11111111, 0x1234, 0x5678, 0x1334, 0x56789abcdef7));
+
 
 
 static ssize_t write_without_rsp_vnd(struct bt_conn *conn,
