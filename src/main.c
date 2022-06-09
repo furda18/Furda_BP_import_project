@@ -50,6 +50,9 @@
 	BT_UUID_128_ENCODE(0x00000000, 0x1234, 0x5678, 0x1234, 0x56789abcdef0)
 
 
+static const struct bt_uuid_128 char1_signed_uuid = BT_UUID_INIT_128(
+	BT_UUID_128_ENCODE(0x13345678, 0x1234, 0x5678, 0x1334, 0x56789abcdef8));
+
 static struct bt_uuid_128 vnd_uuid = BT_UUID_INIT_128(
 	BT_UUID_CUSTOM_SERVICE_VAL);
 
@@ -120,7 +123,7 @@ static struct bt_gatt_cep vnd_long_cep = {
 
 static int signed_value;
 static int signed_value1;
-static long signed_value2;
+static int signed_value2;
 static int len_of_value;
 
 typedef void (*some_random_function)();
@@ -128,6 +131,11 @@ static char *value_written;
 int value_written_length = 0;
 
 char my_value_ok[100];
+
+
+static int signed_value;
+static int signed_value1;
+
 
 
 
@@ -141,21 +149,23 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
         int counter = 0;
 
         //printk("value_written_length: %d\n", value_written_length);
-
-        for (int i = 0; i < len; i++){
+        
+        printf("READ:\n");
+        for (int i = 0; i < 100; i++){
           printf("value[%d] = ", i);
           printf("%" PRIx32 "\n", value[i]);   
-          if(value[i] == 0){
-            counter++;
-          }
+          //if(value[i] == 0){
+          //  counter++;
+          //}
         }
 
         
-    
-        rc = nvs_read(&fs, KEY_ID, &key, sizeof(key));
+        printk("len=%d  sizeof(key)=%d strlen(key)=%d\n", len, sizeof(key), strlen(key));
+
+        rc = nvs_read(&fs, KEY_ID, &key, 100);
         if (rc > 0) { /* item was found, show it */
 		printk("Id: %d, THE Key is: ", KEY_ID);
-		for (int n = 0; n < len; n++) {
+		for (int n = 0; n < 100; n++) {
 			printk("%x ", key[n]);
 		}
 		printk("\n");
@@ -164,15 +174,18 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
        
 
         // if input is 000000, all bytes are reseted to 0
-        if(counter == 3){
-           printk("00-00-00 configuration, rewriting for key! \n");
-           for (int i = 0; i < len; i++){           
-              value[i] = key[i];
-              printk("%x to %x ", value[i], key[i]);
-           }
-        }    
-	return bt_gatt_attr_read(conn, attr, buf, len, offset, value,
-				 strlen(value));
+        //if(counter == 3){
+        //   printk("00-00-00 configuration, rewriting for key! \n");
+        //   for (int i = 0; i < len; i++){           
+        //      value[i] = key[i];
+        //      printk("%x to %x ", value[i], key[i]);
+        //   }
+        //}    
+	//return bt_gatt_attr_read(conn, attr, buf, len, offset, value,
+	//			 strlen(value));
+
+        return bt_gatt_attr_read(conn, attr, buf, len, offset, value,
+				 100);
        
 }
 
@@ -182,7 +195,7 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
 			    uint16_t flags)
 {         
         uint8_t *value = attr->user_data;
-        uint8_t *stable_value = value;
+        
         
 
         LOG_INF("Dlzka prijatych dat: %d\n", len);
@@ -199,28 +212,34 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
         rc = 1;
         if (rc > 0) { /* item was found, show it */
 		
-                for (int n = 0; n < len; n++) {
+                for (int n = 0; n < 100; n++) {
 			//printk("%x ", key[n]);
                         key[n] = value[n];
                         my_value_ok[n] = value[n];
+                        if(n>len){
+                          key[n] = 0;
+                        }
 		}
                 (void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
                 printf("-.-.->\n");
 		for (int n = 0; n < len; n++) {
 			printk("%d. %x \n", n, key[n]);  
-                        printk("%d. %x \n", n, my_value_ok[n]);            
+                        //printk("%d. %x \n", n, my_value_ok[n]);            
 		}
 		printk("\n");
 	} else   {/* item was not found, add it */
-		for (int n = 0; n < len; n++) {
+		for (int n = 0; n < 100; n++) {
 			my_value_ok[n] = value[n];
                         key[n] = value[n];
+                        if(n>len){
+                          key[n] = 0;
+                        }
 		}
 		(void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
                 printf("--->\n");
-                for (int n = 0; n < len; n++) {
+                for (int n = 0; n < 100; n++) {
 			printk("%d. %x \n", n, key[n]);  
-                        printk("%d. %x \n", n, my_value_ok[n]);             
+                        //printk("%d. %x \n", n, my_value_ok[n]);             
 		}
 	}
         
@@ -274,6 +293,7 @@ BT_GATT_SERVICE_DEFINE(vnd_svc,
 			       BT_GATT_CHRC_WRITE | BT_GATT_CHRC_AUTH,
 			       BT_GATT_PERM_READ | BT_GATT_PERM_WRITE,
 			       read_char2, write_char2, &signed_value2),
+        
 	
 );
 
@@ -441,9 +461,10 @@ void main(void)
         //unsigned char my_value_ok[] = {02,00,10,02,35, 00,01, 03, 00,10,02, 35, 00, 02};
 
         //scenar 2
-         int value_written_length_1 = 28;
+        int value_written_length_1 = 28;
         unsigned char my_value_ok[] = {03,00,00,02,47,00,02,06,00,16,02,47,00,01,02,00,00,02,47,00,01,05,00,00,02,47,00,02};
-          //unsigned char my_value_ok = {0x02,0x00,0x10,0x02,0x35, 0x00,0x01, 0x03, 0x00,0x10,0x02, 0x35, 0x00, 0x02};
+
+
 	while (1) {
 		k_sleep(K_SECONDS(2));
 

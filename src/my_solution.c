@@ -34,10 +34,10 @@ static struct nvs_fs fs;
 #define STORAGE_NODE_LABEL storage
 
 #define LEN_ID 1
-#define KEY_ID 2
+#define KEY_ID 3
 
 int rc = 0;
-uint8_t *key;
+uint8_t key[100];
 struct flash_pages_info info;
 const struct device *flash_dev;
 
