@@ -33,6 +33,7 @@ static struct nvs_fs fs;
 
 #define STORAGE_NODE_LABEL storage
 
+#define LEN_ID 1
 #define KEY_ID 2
 
 int rc = 0;
@@ -81,10 +82,10 @@ void execute_function_named(void (*f)(void)) {
 void resolve(char *value_incoming, int value_incoming_length) {
 
 
-  if (config_has_been_written == false) {
-    printf("No config written yet!\n");
-    return;
-  }
+  //if (config_has_been_written == false) {
+  //  printf("No config written yet!\n");
+  //  return;
+  //}
 
   printf("SOM V MOJOM RESOLVE\n");
   for (int i = 0; i < value_incoming_length; i++) {

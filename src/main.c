@@ -125,7 +125,6 @@ static int len_of_value;
 
 typedef void (*some_random_function)();
 static char *value_written;
-
 int value_written_length = 0;
 
 char my_value_ok[100];
@@ -141,7 +140,9 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
        
         int counter = 0;
 
-        for (int i = 0; i < value_written_length; i++){
+        //printk("value_written_length: %d\n", value_written_length);
+
+        for (int i = 0; i < len; i++){
           printf("value[%d] = ", i);
           printf("%" PRIx32 "\n", value[i]);   
           if(value[i] == 0){
@@ -154,7 +155,7 @@ static ssize_t read_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr,
         rc = nvs_read(&fs, KEY_ID, &key, sizeof(key));
         if (rc > 0) { /* item was found, show it */
 		printk("Id: %d, THE Key is: ", KEY_ID);
-		for (int n = 0; n < key; n++) {
+		for (int n = 0; n < len; n++) {
 			printk("%x ", key[n]);
 		}
 		printk("\n");
@@ -193,6 +194,9 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
         len_of_value = len;
 	/* KEY_ID is used to store a key, lets see if we can read it from flash */
 	rc = nvs_read(&fs, KEY_ID, &key, sizeof(key));
+
+        //printk("SIZEOF KEY: %d", sizeof(key));
+        rc = 1;
         if (rc > 0) { /* item was found, show it */
 		
                 for (int n = 0; n < len; n++) {
@@ -201,25 +205,29 @@ static ssize_t write_char2(struct bt_conn *conn, const struct bt_gatt_attr *attr
                         my_value_ok[n] = value[n];
 		}
                 (void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
-  //              printf("-.-.->\n");
-		//for (int n = 0; n < len; n++) {
-		//	printk("%d. %x \n", n, key[n]);            
-		//}
-		//printk("\n");
+                printf("-.-.->\n");
+		for (int n = 0; n < len; n++) {
+			printk("%d. %x \n", n, key[n]);  
+                        printk("%d. %x \n", n, my_value_ok[n]);            
+		}
+		printk("\n");
 	} else   {/* item was not found, add it */
 		for (int n = 0; n < len; n++) {
 			my_value_ok[n] = value[n];
                         key[n] = value[n];
 		}
 		(void)nvs_write(&fs, KEY_ID, &key, sizeof(key));
-  //              printf("--->\n");
-  //              for (int n = 0; n < len; n++) {
-		//	printk("%d. %x \n", n, key[n]);               
-		//}
+                printf("--->\n");
+                for (int n = 0; n < len; n++) {
+			printk("%d. %x \n", n, key[n]);  
+                        printk("%d. %x \n", n, my_value_ok[n]);             
+		}
 	}
-
         
-        value_written_length = len;
+       
+        
+        //value_written_length = len;
+        //printk("value_written_length: %d\n", value_written_length);
         
         //must be true to execute resolve
         config_has_been_written = true;
@@ -426,8 +434,18 @@ void main(void)
 	/* Implement notification. At the moment there is no suitable way
 	 * of starting delayed work so we do it here
 	 */
+        
+      
+        //scenar 1
+        //int value_written_length_1 = 14;
+        //unsigned char my_value_ok[] = {02,00,10,02,35, 00,01, 03, 00,10,02, 35, 00, 02};
+
+        //scenar 2
+         int value_written_length_1 = 28;
+        unsigned char my_value_ok[] = {03,00,00,02,47,00,02,06,00,16,02,47,00,01,02,00,00,02,47,00,01,05,00,00,02,47,00,02};
+          //unsigned char my_value_ok = {0x02,0x00,0x10,0x02,0x35, 0x00,0x01, 0x03, 0x00,0x10,0x02, 0x35, 0x00, 0x02};
 	while (1) {
-		k_sleep(K_SECONDS(1));
+		k_sleep(K_SECONDS(2));
 
 		
 		if (simulate_vnd && vnd_ind_attr) {
@@ -446,10 +464,11 @@ void main(void)
 			}
 		}
                 
-                //for(int i=0; i<value_written_length; i++){
+                //printf("VALUE WRITTEN LENGTH: %d\n", value_written_length_1);
+                //for(int i=0; i<value_written_length_1; i++){
                 //  printf("MAIN: %d\n", my_value_ok[i]);
                 //}
-                resolve(my_value_ok, value_written_length);
+                //resolve(my_value_ok, value_written_length_1);
 
 
 	}
